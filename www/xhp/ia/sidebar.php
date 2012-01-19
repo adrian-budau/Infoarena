@@ -2,6 +2,7 @@
 // Contains XHP objects for the site's left side bar.
 
 require_once(IA_ROOT_DIR . 'www/xhp/ia/login_form.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/list.php');
 
 class :ia:left-col extends :x:element {
     attribute
@@ -27,63 +28,66 @@ class :ia:left-navbar extends :x:element {
     protected function render() {
         $user = $this->getAttribute('user');
         $list =
-          <ul id="nav" class="clear">
-            <li><a href={url_home()}>Home</a></li>
-            <li>
-              <ui:link href={url_textblock('arhiva')} accesskey="a">
-                Arhiva de probleme
-              </ui:link>
+          <ui:list id="nav" class="clear">
+            <ui:link href={url_home()}>
+              Home
+            </ui:link>
+
+            <ui:link href={url_textblock('arhiva')} accesskey="a">
+              Arhiva de probleme
+            </ui:link>
+            <ui:link href={url_textblock('arhiva-educationala')}>
+              Arhiva educatională
+            </ui:link>
+            <ui:link href={url_textblock('concursuri')}>
+              Concursuri
+            </ui:link>
+            <ui:link href={url_textblock('concursuri-virtuale')}>
+              Concursuri virtuale
+            </ui:link>
+            <ui:link href={url_textblock('clasament-rating')}>
+              Clasament
+            </ui:link>
+            <ui:link href={url_textblock('articole')}>
+              Articole
+            </ui:link>
+            <ui:link href={url_textblock('downloads')}>
+              Downloads
+            </ui:link>
+            <ui:link href={url_textblock('links')}>
+              Links
+            </ui:link>
+            <ui:link href={url_textblock('documentatie')}>
+              Documentaţie
+            </ui:link>
+            <ui:link href={url_textblock('despre-infoarena')}>
+              Despre infoarena
+            </ui:link>
+            <li class="separator">
+              <hr/>
             </li>
-            <li>
-              <a href={url_textblock('arhiva-educationala')}>
-                Arhiva educatională
-              </a>
-            </li>
-            <li><a href={url_textblock('concursuri')}>Concursuri</a></li>
-            <li>
-              <a href={url_textblock('concursuri-virtuale')}>
-                Concursuri virtuale
-              </a>
-            </li>
-            <li><a href={url_textblock('clasament-rating')}>Clasament</a></li>
-            <li><a href={url_textblock('articole')}>Articole</a></li>
-            <li><a href={url_textblock('downloads')}>Downloads</a></li>
-            <li><a href={url_textblock('links')}>Links</a></li>
-            <li><a href={url_textblock('documentatie')}>Documentaţie</a></li>
-            <li>
-              <a href={url_textblock('despre-infoarena')}>Despre infoarena</a>
-            </li>
-            <li class="separator"><hr/></li>
-          </ul>;
+          </ui:list>;
 
         if ($user) {
             $list->appendChild(
-              <li>
                 <ui:link
                   href={url_monitor(array('user' => $user['username']))}
                   accesskey="m">
                   Monitorul de evaluare
-                </ui:link>
-              </li>);
+                </ui:link>);
             $list->appendChild(
-              <li>
-                <a href={url_submit()}>
+                <ui:link href={url_submit()}>
                   <strong>Trimite soluţii</strong>
-                </a>
-              </li>);
+                </ui:link>);
             $list->appendChild(
-              <li>
                 <ui:link href={url_account()} accesskey="c">
                   Contul meu
-                </ui:link>
-              </li>);
+                </ui:link>);
         } else {
             $list->appendChild(
-              <li>
                 <ui:link href={url_monitor()} accesskey="m">
                   Monitorul de evaluare
-                </ui:link>
-              </li>);
+                </ui:link>);
         }
 
         return $list;
@@ -99,6 +103,7 @@ class :ia:sidebar-ad extends :x:element {
             return <x:frag />;
         }
 
+        // FIXME: add XHP support
         return
           <div class="ad">
             <div class="wiki_text_block">
@@ -122,9 +127,13 @@ class :ia:sidebar-login extends :x:element {
 
         $extra =
           <p>
-            <ui:link href={url_register()}>Mă înregistrez!</ui:link>
+            <ui:link href={url_register()}>
+              Mă înregistrez!
+            </ui:link>
             <br />
-            <ui:link href={url_resetpass()}>Mi-am uitat parola...</ui:link>
+            <ui:link href={url_resetpass()}>
+              Mi-am uitat parola...
+            </ui:link>
           </p>;
 
         return
