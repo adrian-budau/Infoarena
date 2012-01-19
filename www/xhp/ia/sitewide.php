@@ -3,6 +3,8 @@
 // frame, such as the website header, footer and navigation bar.
 
 require_once(IA_ROOT_DIR . 'www/xhp/ui/link.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/list.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/user.php');
 
 class :ia:header:userbox extends :x:element {
     attribute
@@ -15,13 +17,28 @@ class :ia:header:userbox extends :x:element {
 
         return
           <div id="userbox">
-            <ui:link href={url_user_profile($username, true)}>
-              {HTML(format_user_avatar($username, "normal", true))}
-            </ui:link>
+            <ui:link:user user={$user}>
+              <ui:user:avatar size="normal"/>
+            </ui:link:user>
             <div class="user">
-              <strong>{$user['full_name']}</strong><br />
-              {HTML(format_user_ratingbadge($username, $user['rating_cache']))}&nbsp;<ui:link href={url_user_profile($username, true)} accesskey="p">{$username}</ui:link><br />
-              {HTML(format_post_link(url_logout(), "logout", array(), true, array('class' => 'logout')))} |
+              <strong>
+                {$user['full_name']}
+              </strong>
+
+              <br />
+
+              <ui:user:rating-badge user={$user} />
+
+              <ui:link:user user={$user} accesskey="p">
+                {$username}
+              </ui:link:user>
+
+              <br />
+
+              <ui:link:post href={url_logout()} class="logout" post_data={array()}>
+                logout
+              </ui:link:post>
+              |
               <ui:link href={url_account()} accesskey="c">contul meu</ui:link>
             </div>
           </div>;
@@ -131,7 +148,11 @@ class :ia:footer extends :x:element {
         $elem =
           <div id="footer">
             <ul class="clear">
-              <li class="copyright">&copy;&nbsp;2004-{date("Y")}&nbsp;<ui:link href={url_textblock('Asociatia-infoarena')}>Asociatia infoarena</ui:link></li>
+              <li class="copyright">&copy;&nbsp;2004-{date("Y")}&nbsp;
+                <ui:link href={url_textblock('Asociatia-infoarena')}>
+                  Asociatia infoarena
+                </ui:link>
+              </li>
               <li class="separate">
                 <ui:link href={url_home()}>Prima pagina</ui:link>
               </li>
@@ -149,7 +170,9 @@ class :ia:footer extends :x:element {
                 <ui:link href={url_textblock('contact')}>Contact</ui:link>
               </li>
               <li class="top">
-                <a href="#header">Sari la inceputul paginii &uarr;</a>
+                <ui:link href="#header">
+                  Sari la inceputul paginii &uarr;
+                </ui:link>
               </li>
             </ul>
           </div>;

@@ -166,6 +166,7 @@ function user_create($user, $remote_ip_info=null)
 // Also updates SMF, which is good.
 function user_update($user)
 {
+    $user['avatar_timestamp'] = time();
     log_assert_valid(user_validate($user));
 
     // Update DB

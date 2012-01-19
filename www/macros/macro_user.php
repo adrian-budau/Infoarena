@@ -2,6 +2,7 @@
 
 require_once(IA_ROOT_DIR . 'www/format/format.php');
 require_once(IA_ROOT_DIR . 'common/db/user.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/user.php');
 
 // Display a link to an user.
 // Includes avatar, etc.
@@ -22,14 +23,11 @@ function macro_user($args) {
 
     $type = getattr($args, 'type', 'link');
     if ($type == 'link') {
-        return format_user_link($dbuser['username'], $dbuser['full_name'],
-                                $dbuser['rating_cache']);
+        return <ui:user:link user={$dbuser} />;
     } else if ($type == 'tiny') {
-        return format_user_tiny($dbuser['username'], $dbuser['full_name'],
-                                $dbuser['rating_cache']);
+        return <ui:user:tiny user={$dbuser} />;
     } else if ($type == 'normal') {
-        return format_user_normal($dbuser['username'], $dbuser['full_name'],
-                                  $dbuser['rating_cache']);
+        return <ui:user:normal user={$dbuser} />;
     } else {
         return macro_error("Unknown userlink type \"$type\"");
     }

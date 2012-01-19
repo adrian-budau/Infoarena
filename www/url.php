@@ -70,7 +70,25 @@ function url_from_args($args)
 // Here are the specific url functions you should use.
 // Names should should be more or less obvious.
 
-// First: textblocks(wiki pages).
+/**
+ * If we want to get the current page with no options
+ * @return string
+ */
+function url_no_options() {
+    return $_GET['page'];
+}
+
+/**
+ * In case we just want to add options to our current page(or modify them)
+ *
+ * @param  $options  array
+ * @return string
+ */
+function url_options_add($options = array()) {
+    return url_from_args(array_merge($_GET, $options));
+}
+
+// textblocks(wiki pages).
 
 function url_textblock($page_name) {
     return url_complex($page_name, array());
@@ -241,12 +259,13 @@ function url_user_stats($username) {
 /**
  * Returns an url to an user's avatar with a given size
  *
- * @param  string  $username
+ * @param  array   $user
  * @param  string  $size_type
  * @return string
  */
-function url_user_avatar($username, $size_type = "full") {
-    return url_complex("avatar/".$size_type."/".$username);
+function url_user_avatar($user, $size_type = "full") {
+    return url_complex("avatar/" . $size_type . "/" . $user['username'],
+            array('timestamp' => $user['avatar_timestamp']));
 }
 
 function url_unsubscribe($username, $key) {

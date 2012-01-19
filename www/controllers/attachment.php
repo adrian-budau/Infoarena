@@ -1,11 +1,12 @@
 <?php
 
-require_once(IA_ROOT_DIR."www/format/pager.php");
-require_once(IA_ROOT_DIR."common/db/textblock.php");
-require_once(IA_ROOT_DIR."common/db/attachment.php");
-require_once(IA_ROOT_DIR.'www/controllers/zip_attachment.php');
-require_once(IA_ROOT_DIR."common/external_libs/zipfile.php");
-require_once(IA_ROOT_DIR."common/avatar.php");
+require_once(IA_ROOT_DIR . 'www/format/pager.php');
+require_once(IA_ROOT_DIR . 'common/db/textblock.php');
+require_once(IA_ROOT_DIR . 'common/db/attachment.php');
+require_once(IA_ROOT_DIR . 'www/controllers/zip_attachment.php');
+require_once(IA_ROOT_DIR . 'common/external_libs/zipfile.php');
+require_once(IA_ROOT_DIR . 'common/avatar.php');
+require_once(IA_ROOT_DIR . 'common/db/user.php');
 
 // Try to get the textblock model for a certain page.
 // If it fails it will flash and redirect
@@ -328,6 +329,7 @@ function controller_attachment_delete($page_name, $file_name, $more_files = 0) {
     // Delete the resizedimages in case the page is an avatar
     $matches = get_page_user_name($page_name);
     if (is_avatar_attachment($file_name, $page_name)) {
+        user_update(identity_get_user());
         avatar_delete($matches[1]);
     }
     // We've got big balls.

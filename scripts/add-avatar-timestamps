@@ -1,0 +1,18 @@
+#! /usr/bin/env php
+<?php
+
+require_once(dirname($argv[0]) . '/utilities.php');
+require_once(IA_ROOT_DIR . 'common/db/db.php');
+require_once(IA_ROOT_DIR . 'common/cache.php');
+
+db_connect();
+
+$result = db_query("SHOW COLUMNS FROM `ia_user` LIKE 'avatar_timestamp'");
+if (mysql_num_rows($result) == 0) {
+    $query = "ALTER TABLE `ia_user` ADD COLUMN avatar_timestamp INT";
+    db_query($query);
+}
+
+db_query("UPDATE `ia_user` SET `avatar_timestamp` = " . time());
+mem_cache_purge();
+?>
