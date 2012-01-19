@@ -2,10 +2,12 @@
 
 // FIXME: This should be marged with macro_rankings.php
 
-require_once(IA_ROOT_DIR . "www/format/table.php");
-require_once(IA_ROOT_DIR . "www/format/pager.php");
-require_once(IA_ROOT_DIR . "www/format/format.php");
-require_once(IA_ROOT_DIR . "common/db/score.php");
+require_once(IA_ROOT_DIR . 'www/format/table.php');
+require_once(IA_ROOT_DIR . 'www/format/pager.php');
+require_once(IA_ROOT_DIR . 'www/format/format.php');
+require_once(IA_ROOT_DIR . 'common/db/score.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/pager.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/table.php');
 
 // Displays *interactive* rankings table displaying user *ratings*.
 //
@@ -22,36 +24,48 @@ function macro_toprated($args) {
 
     $rankings = get_users_by_rating_range($options['first_entry'], $options['display_entries'], true);
 
-    $column_infos = array(
-        array(
-            'title' => 'Loc',
-            'key' => 'position',
-            'css_class' => 'number rank',
-        ),
-        array(
-            'title' => 'Nume',
-            'key' => 'full_name',
-            'rowform' => function($row) {
-                return format_user_normal($row['username'], $row['full_name'], $row['rating_cache']);
-            },
-        ),
-        array(
-            'title' => 'Rating',
-            'key' => 'rating_cache',
-            'rowform' => function($row) {
-                return rating_scale($row['rating_cache']);
-            },
-            'css_class' => 'number rating',
-        ),
-    );
-    if (pager_needs_total_entries($options)) {
-        $options['total_entries'] = get_users_by_rating_count();
+    $header =
+      <x:frag>
+        <th class="number rank">
+          Loc
+        </th>
+        Nume
+        <th class="number rating">
+          Rating
+        </th>
+      </x:frag>;
+
+    $content = <x:frag />;
+    foreach ($rankings as $user) {
+        $content -> appendChild(<x:frag>
+                                  <td class="number rank">
+                                    {(int)$user['position']}
+                                  </td>
+                                  <ui:user:normal user={$user} />
+                                  <td class="number rating">
+                                    {(int)rating_scale($user['rating_cache']) }
+                                  </td>
+                                </x:frag>);
     }
+    $options['total_entries'] = get_users_by_rating_count();
 
     if (0 >= count($rankings)) {
         return macro_message('Nici un utilizator cu rating.');
     } else {
-        return format_table($rankings, $column_infos, $options);
+        $pager =
+          <ui:pager:page-number first_entry={$options['first_entry']} display_entries={$options['display_entries']}
+              total_entries={$options['total_entries']} show_count={true} show_display_entries={true}
+              prefix="toprated_" />;
+
+        return
+          <x:frag>
+            {$pager}
+            <ui:table sortable={true} cols={3}>
+              {$header}
+              {$content}
+            </ui:table>
+            {$pager}
+          </x:frag>;
     }
 }
 

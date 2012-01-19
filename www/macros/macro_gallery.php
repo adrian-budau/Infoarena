@@ -39,16 +39,19 @@ function macro_gallery($args) {
     $atts = attachment_get_all($page, $file, $options['first_entry'], $options['display_entries']);
 
     // display gallery
-    $buffer = '<div class="gallery"><div class="images">';
+    $gallery = <div class="images" />;
     foreach ($atts as $attach) {
         $thumbsrc = url_image_resize($attach['page'], $attach['name'], "130x80");
         $fullsrc = url_image_resize($attach['page'], $attach['name'], null);
-        $buffer .= "<a href=\"".html_escape($fullsrc)."\"><img src=\"".html_escape($thumbsrc)."\" alt=\"".html_escape($attach['page'])."\" /></a>";
+        $gallery -> appendChild(<ui:link href={$fullsrc}> <img src={$thumbsrc} alt={$attach['page']} /> </ui:link>);
     }
-    $buffer .= '</div>';
-    $buffer .= format_pager($options);
-    $buffer .= '</div>';
 
+    return
+      <div class="gallery">
+        {$gallery}
+        <ui:pager:page-number display_entries={$options['display_entries']} total_entries={$options['total_entries']}
+            first_entry={$options['first_entry']} show_count={true} />
+      </div>;
     return $buffer;
 }
 

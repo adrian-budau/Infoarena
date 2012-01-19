@@ -1,9 +1,11 @@
 <?php
 
-require_once(IA_ROOT_DIR . "www/format/table.php");
-require_once(IA_ROOT_DIR . "www/format/pager.php");
-require_once(IA_ROOT_DIR . "www/format/format.php");
-require_once(IA_ROOT_DIR . "common/db/score.php");
+require_once(IA_ROOT_DIR . 'www/format/pager.php');
+require_once(IA_ROOT_DIR . 'www/format/format.php');
+require_once(IA_ROOT_DIR . 'common/db/score.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/user.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/table.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/pager.php');
 
 // Displays *interactive* rankings table summing up score points from a
 // pre-defined set of contest rounds.
@@ -40,8 +42,6 @@ function macro_rankings($args) {
 
     // Paginator options
     $options = pager_init_options($args);
-    $options['show_count'] = true;
-    $options['css_class'] = 'sortable';
 
     // Rounds parameters
     $roundstr = getattr($args, 'rounds', '');
@@ -63,20 +63,13 @@ function macro_rankings($args) {
 
     // Generating Table
 
-    $column_infos = array(
-        array(
-            'title' => 'Pozitie',
-            'key' => 'ranking',
-            'css_class' => 'number rank'
-        ),
-        array(
-            'title' => 'Nume',
-            'key' => 'user_full',
-            'rowform' => function($row) {
-                return format_user_normal($row['user_name'], $row['user_full'], $row['user_rating']);
-            },
-        ),
-    );
+    $header =
+      <x:frag>
+        <th class="number rank">
+          {'Pozitie'}
+        </th>
+        Nume
+      </x:frag>;
 
     $columns = array();
     $tasks = array();
@@ -87,63 +80,74 @@ function macro_rankings($args) {
             if ($detail_task == true) {
                 $new_tasks = round_get_tasks($round_id);
                 foreach ($new_tasks as $task) {
-                    array_push($columns, array(
-                        'name' => $task['id'],
-                        'type' => 'task',
-                        'title' => $task['title']
-                    ));
+                    $header -> appendChild(<th class="number score">
+                                          {$task['title']}
+                                        </th>);
+                    $columns[] = 'task_scores_' . $task['id'];
                     array_push($tasks, $task['id']);
                 }
             }
 
             if ($detail_round == true) {
-                array_push($columns, array(
-                    'name' => $round['round_id'],
-                    'type' => 'round',
-                    'title' => $round['round_name']
-                ));
+                $header -> appendChild(<th class="number score">
+                                      {$round['round_name']}
+                                    </th>);
+                $columns[] = 'round_scores_' . $round['round_id'];
             }
         }
-    }
-
-    foreach ($columns as $column) {
-        array_push($column_infos, array(
-            'title' => $column['title'],
-            'key' => $column['name'],
-            'rowform' => function($row) use ($column) {
-                return round($row[$column['name']]);
-            },
-            'css_class' => 'number score'
-        ));
     }
 
     $total = 'Scor';
     if ($detail_round == true || $detail_task == true) {
         $total = 'Total';
     }
-    array_push($column_infos, array(
-        'title' => $total,
-        'key' => 'score',
-        'rowform' => function($row) {
-            return round($row['score']);
-        },
-        'css_class' => 'number score'
-    ));
+    $header -> appendChild(<th class="number score">
+                             {$total}
+                           </th>);
+
+    $content = <x:frag />;
 
     $round_ids = array();
     foreach ($rounds as $round) {
         array_push($round_ids, $round['round_id']);
     }
     $rankings = score_get_rankings($round_ids, $tasks, $options['first_entry'], $options['display_entries'], $detail_task, $detail_round);
-
-    if (pager_needs_total_entries($options)) {
-        $options['total_entries'] = score_get_count(null, null, $round_ids);
+    foreach ($rankings as $user) {
+        $content -> appendChild(<x:frag>
+                                  <td class="number rank">
+                                    {$user['ranking']}
+                                  </td>
+                                  <ui:user:normal user={$user} />
+                                </x:frag>);
+        foreach ($columns as $column) {
+            $content -> appendChild(<td class="number score">
+                                      {(int)$user[$column]}
+                                    </td>);
+        }
+        $content -> appendChild(<td class="number score">
+                                {(int)$user['score']}
+                              </td>);
     }
+
+    $options['total_entries'] = score_get_count(null, null, $round_ids);
 
     if (0 >= count($rankings)) {
         return macro_message('Nici un rezultat inregistrat pentru aceasta runda.');
     } else {
-        return format_table($rankings, $column_infos, $options);
+        $pager =
+          <ui:pager:page-number first_entry={$options['first_entry']} display_entries={$options['display_entries']}
+            total_entries={$options['total_entries']} show_count={true} show_display_entries={true}
+            prefix="rankings_"/>;
+
+        return
+          <x:frag>
+            {$pager}
+            <ui:table sortable={true} cols={count($columns) + 3} >
+              {$header}
+              {$content}
+            </ui:table>
+            {$pager}
+          </x:frag>;
     }
 }
 

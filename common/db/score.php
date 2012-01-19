@@ -372,9 +372,7 @@ function score_get_rankings($rounds, $tasks, $start = 0, $count = 999999,
     // Get the total score for all rounds
     $query = "
         SELECT ".(count($rounds) > 1 ? "SUM(score) AS score" : "score").",
-                user_id, ia_user.username AS user_name,
-                ia_user.full_name AS user_full,
-                ia_user.rating_cache AS user_rating
+                user_id AS id, ia_user.*
         FROM ia_score_user_round
         LEFT JOIN ia_user ON ia_user.id = ia_score_user_round.user_id
         WHERE".implode('AND', $where)."
@@ -389,7 +387,7 @@ function score_get_rankings($rounds, $tasks, $start = 0, $count = 999999,
 
     $users = array();
     foreach ($rankings as $ranking) {
-        array_push($users, $ranking['user_id']);
+        array_push($users, $ranking['id']);
     }
 
     // Further queries concern only the users that are in this rankings page
@@ -440,7 +438,7 @@ function score_get_rankings($rounds, $tasks, $start = 0, $count = 999999,
 
     //create all entries
     for ($i = 0; $i < count($rankings); $i++) {
-        $user_id = $rankings[$i]['user_id'];
+        $user_id = $rankings[$i]['id'];
 
         //task columns
         if ($detail_task == true) {
@@ -450,7 +448,7 @@ function score_get_rankings($rounds, $tasks, $start = 0, $count = 999999,
                 } else {
                     $score = 0;
                 }
-                $rankings[$i][$task_id] = $score;
+                $rankings[$i]['task_scores_' . $task_id] = $score;
             }
         }
 
@@ -462,7 +460,7 @@ function score_get_rankings($rounds, $tasks, $start = 0, $count = 999999,
                 } else {
                     $score = 0;
                 }
-                $rankings[$i][$round_id] = $score;
+                $rankings[$i]['round_scores_' . $round_id] = $score;
             }
         }
 
