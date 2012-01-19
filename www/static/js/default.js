@@ -5,10 +5,10 @@
 
 function Page_Init() {
     // fade away flash message
-    var flash = $('flash');
-    if (flash && !hasElementClass(flash, 'flashError')) {
+    var flash = $$('.flash');
+    if (flash[0] && !hasElementClass(flash[0], 'flashError')) {
         var callback = function() {
-            hideElement(flash);
+            hideElement(flash[0]);
         }
         setTimeout(callback, 13000);
     }
