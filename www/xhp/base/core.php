@@ -335,6 +335,18 @@ abstract class :x:composable-element extends :x:base {
   }
 
   /**
+  * FIXME: IA Hack Does the same thing as the function above but it does not throw any exception
+  */
+  final public function hasAttribute($attribute, $value = null) {
+    try {
+      $this -> validateAttributeValue($attribute, $value);
+      return true;
+    } catch (Exception $exception) {
+      return false;
+    }
+}
+
+  /**
    * Validates that this element's children match its children descriptor, and
    * throws an exception if that's not the case.
    */
