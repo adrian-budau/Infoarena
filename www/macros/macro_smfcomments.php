@@ -14,7 +14,7 @@ require_once(IA_ROOT_DIR.'www/macros/macro_remotebox.php');
 //      SmfComments( topic_id="400" display="show" )
 //      SmfComments( topic_id="400" display="hide" max_comm="5")
 function macro_smfcomments($args) {
-    $comments = '<div id="comentarii">';
+    $comments = <div id="comentarii" />;
 
     $topic_id = getattr($args, 'topic_id');
     $display = getattr($args, 'display');
@@ -43,9 +43,7 @@ function macro_smfcomments($args) {
         $url .= '&max_comm=' . $max_comm;
     }
 
-    $comments .= macro_remotebox($url, true);
-    $comments .= '</div>';
-
+    $comments -> appendChild(macro_remotebox($url, true));
     return $comments;
 }
 

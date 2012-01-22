@@ -20,11 +20,11 @@ class :ia:login-form extends :x:element {
 
               <ui:list class="form">
 
-                <ui:form_field name="username" type="string" access_key="c">
+                <ui:form_field name="username" type="string" accesskey="c">
                   Cont de utilizator
                 </ui:form_field>
 
-                <ui:form_field name="password" type="password" access_key="p">
+                <ui:form_field name="password" type="password" accesskey="p">
                   Parola
                 </ui:form_field>
 

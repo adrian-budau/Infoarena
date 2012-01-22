@@ -10,15 +10,15 @@ function hijack_title(&$text, $url, $title) {
     if (preg_match('/^\s*<h1>(.*)<\/h1>(.*)$/sxi', $text, $matches)) {
         $text = $matches[2];
         if (is_null($url)) {
-            return '<h1>'.$matches[1].'</h1>';
+            return <h1> {$matches[1]} </h1>;
         } else {
-            return '<h1>'.format_link($url, $matches[1], false).'</h1>';
+            return <h1> <ui:link href={$url}> {$matches[1]} </ui:link> </h1>;
         }
     } else {
         if (is_null($url)) {
-            return '<h1>'.html_escape($title).'</h1>';
+            return <h1> {$title} </h1>;
         } else {
-            return '<h1>'.format_link($url, $title).'</h1>';
+            return <h1> <ui:link href={$url}> {$title} </ui:link> </h1>;
         }
     }
 }

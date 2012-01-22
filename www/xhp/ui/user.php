@@ -1,7 +1,7 @@
 <?php
 
 require_once(IA_ROOT_DIR . 'www/xhp/ui/base.php');
-
+require_once(IA_ROOT_DIR . 'www/format/format.php');
 class :ui:user extends :ui:element {
     attribute
         array user;
@@ -25,7 +25,7 @@ class :ui:user:rating-badge extends :ui:user {
 
     protected function render() {
         $user = $this -> getAttribute('user');
-        $is_admin = user_is_admin($user);
+        $is_admin = user_is_admin($user, false);
         $rating = $user['rating_cache'];
         $class = rating_group($rating, $is_admin);
         $rating = rating_scale($rating);
@@ -44,6 +44,8 @@ class :ui:user:rating-badge extends :ui:user {
 }
 
 class :ui:user:link extends :ui:user {
+    attribute
+        bool show_rating = true;
 
     protected function render() {
         $user = $this -> getAttribute('user');
@@ -52,12 +54,19 @@ class :ui:user:link extends :ui:user {
             {$user['full_name']}
           </ui:link:user>;
 
-        if (!is_null($user['rating_cache'])) {
+        if ($this -> getAttribute('show_rating') && !is_null($user['rating_cache'])) {
             $link -> setAttribute('class', 'user_' . rating_group($user['rating_cache']));
         }
+
+        if ($this -> getAttribute('show_rating')) {
+            $rating_badge = <ui:user:rating-badge user={$user} />;
+        } else {
+            $rating_badge = <x:frag />;
+        }
+
         return
           <x:frag>
-            <ui:user:rating-badge user={$user} />
+            {$rating_badge}
             {$link}
           </x:frag>;
     }

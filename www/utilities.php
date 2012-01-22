@@ -12,6 +12,7 @@ require_once(IA_ROOT_DIR . 'www/xhp/ia/user_count.php');
 require_once(IA_ROOT_DIR . 'www/xhp/ia/server_time.php');
 require_once(IA_ROOT_DIR . 'www/xhp/ui/breadcrumbs.php');
 require_once(IA_ROOT_DIR . 'www/xhp/ui/flash_message.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ia/log.php');
 
 // Wrapper around htmlentities which defaults charset to UTF-8
 function html_escape($string, $quote_style = ENT_COMPAT, $charset = "UTF-8")
@@ -299,16 +300,47 @@ function default_view_compose($title = null,
 }
 
 /*
+ * Renders the main page and then dies.
+ */
+
+function execute_render_die($content, $title = null,
+                            $top_navbar_selected = "infoarena",
+                            $hide_sidebar_login_form = false,
+                            $charset = "UTF-8") {
+    $ia_page = default_view_compose($title, $top_navbar_selected,
+                                    $hide_sidebar_login_form, $charset);
+
+    $ia_page -> appendChild(
+      <ia:content>
+        {$content}
+      </ia:content>);
+
+    if (IA_DEVELOPMENT_MODE) {
+        // Development mode: display current page's log in site footer
+        global $execution_stats;
+        log_execution_stats();
+        $buffer = $execution_stats['log_copy'];
+        $ia_page -> appendChild(
+          <ia:log>
+            {$buffer}
+          </ia:log>);
+    }
+
+    echo $ia_page;
+    session_write_close();
+    die();
+}
+/*
  * DEPRECATED: Please use XHP based views.
  *
- * Execute as view. Variables in $view are placed in the local namespace as
- * variables. This is the preffered way of calling a template, because globals
- * are not easily accessible.
+ * Execute as view and dies. Variables in $view are placed in the local
+ * namespace as variables. This is the preffered way of calling a template,
+ * because globals are not easily accessible.
  *
  * @param   string  $view_file_name
  * @param   array   $view
  */
-function execute_view($view_file_name, $view) {
+function execute_view_die($view_file_name, $view) {
     $_xhp_page = default_view_compose(
         getattr($view, 'title'),
         getattr($view, 'topnav_select', 'infoarena'),
@@ -335,26 +367,19 @@ function execute_view($view_file_name, $view) {
       <ia:content>
         {HTML($rendered)}
       </ia:content>);
-    echo $_xhp_page;
-}
 
-/*
- * DEPRECATED: Please use XHP based views.
- *
- * Executes view and then dies.
- */
-function execute_view_die($view_file_name, $view) {
-    execute_view($view_file_name, $view);
     if (IA_DEVELOPMENT_MODE) {
         // Development mode: display current page's log in site footer
         global $execution_stats;
         log_execution_stats();
         $buffer = $execution_stats['log_copy'];
-        echo
-          <textarea id="log" rows="50" cols="80">
+        $_xhp_page -> appendChild(
+          <ia:log>
             {$buffer}
-          </textarea>;
+          </ia:log>);
     }
+
+    echo $_xhp_page;
     session_write_close();
     die();
 }

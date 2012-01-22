@@ -62,6 +62,17 @@ function identity_can($action, $object = null) {
     return security_query($identity_user, $action, $object);
 }
 
+/**
+ * Returns the actions the current user is allowed on an object
+ *
+ * @param  array  object
+ * @return array
+ */
+function identity_actions($object) {
+    global $identity_user;
+    return security_actions_query($identity_user, $object);
+}
+
 // Require login first.
 // It makes a lot of sense to separate this from security. No matter what
 // dumb little security.php might say, some things absolutely require login.

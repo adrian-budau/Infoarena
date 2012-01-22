@@ -20,6 +20,7 @@ if (is_null($max_comm)) {
 } else {
     ssi_commentThread($topic_id, $display, $begin_comm, (int)$max_comm);
 }
+
 echo '</div>';
 
 ?>

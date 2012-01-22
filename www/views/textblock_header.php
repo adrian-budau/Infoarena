@@ -37,7 +37,7 @@ log_assert_valid(textblock_validate($textblock));
 </li>
 <?php } ?>
 <?php if (identity_can('textblock-attach', $textblock)) { ?>
-<li><?= format_link_access(url_attachment_new($textblock['name']), 'Ataşează', 'a') ?></li>
+<li><?= format_link_access(url_attachment_new($textblock['name']), 'Ataşează', 't') ?></li>
 <?php } ?>
 <?php if (identity_can('textblock-list-attach', $textblock)) { ?>
 <li><?= format_link_access(url_attachment_list($textblock['name']), 'Listează ataşamente', 'l') ?></li>

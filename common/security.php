@@ -131,11 +131,11 @@ function security_simplify_action($action) {
         case 'task-delete':
         case 'task-tag':
         case 'task-reeval':
-        case 'task-edit-ratings': 
+        case 'task-edit-ratings':
         case 'textblock-delete':
         case 'textblock-delete-revision':
         case 'round-tag':
-        case 'round-view-progress': 
+        case 'round-view-progress':
         case 'grader-overwrite':
         case 'grader-delete':
         case 'grader-rename':
@@ -179,6 +179,105 @@ function security_simplify_action($action) {
         default:
             log_error('Invalid action: '.$action);
     }
+}
+
+/**
+ * Ask for the available actions on the object
+ * For use in XHP objects so they won't query the identity user
+ * FIXME: add all the other object types security queries
+ *
+ * @param  $user    array
+ * @param  $object  array
+ * @return array
+ */
+function security_actions_query($user, $object) {
+    log_assert(is_array($object),
+        '$object must be an array');
+
+    if (IA_LOG_SECURITY) {
+        $username = getattr($user, 'username', 'null');
+        $security_level = getattr($user, 'security_level', 'anonymus');
+        $object_name = getattr($object, 'name', $object);
+        log_print("SECURITY QUERY: ($username, $security_level, $object): "
+                . "(username, level, object)");
+    }
+
+    switch ($object['type']) {
+        case 'textblock':
+           $actions = security_actions_textblock($user, $object);
+           break;
+
+        default:
+            log_error('Invalid type of object: ' . $object['type']);
+    }
+
+    if (IA_LOG_SECURITY) {
+        if (count($actions) == 0) {
+            log_print("NO ACTIONS");
+        } else {
+            log_print_r($actions);
+        }
+    }
+
+    return $actions;
+}
+
+/**
+ * Checks what actions an user can perform on a given textblock
+ * For use in XHP object
+ *
+ * @param  $user       the user array containing all the necessary
+ *                     information about the user
+ * @param  $textblock
+ * @return array
+ */
+function security_actions_textblock($user, $textblock) {
+    $user_security_level = getattr($user, 'security_level', 'anonymus');
+    $textblock_security_level = getattr($textblock, 'security');
+
+    $view_actions = array('view', 'history', 'list-attach');
+    $sensitive_info = array('view-ip');
+    $reversible_actions = array('edit', 'restore', 'attach', 'create',
+            'change-topic', 'copy');
+    $admin_actions = array('move', 'delete', 'delete-revision',
+            'change-security', 'tag');
+
+    $actions = array();
+    if ($textblock_security_level == 'public') {
+        switch ($user_security_level) {
+            case 'admin':
+                $actions = array_merge($actions, $admin_actions);
+            case 'intern':
+            case 'helper':
+                $actions = array_merge($actions, $sensitive_info);
+            case 'normal':
+                $actions = array_merge($actions, $reversible_actions);
+            default:
+                $actions = array_merge($actions, $view_actions);
+                break;
+        }
+    } elseif ($textblock_security_level == 'protected') {
+        switch ($user_security_level) {
+            case 'admin':
+                $actions = array_merge($actions, $admin_actions,
+                        $reversible_actions);
+            case 'intern':
+            case 'helper':
+                $actions = array_merge($actions, $sensitive_info);
+            case 'normal':
+            default:
+                $actions = array_merge($actions, $view_actions);
+        }
+    } else {
+        if ($user_security_level == 'admin') {
+            $actions = array_merge($admin_actions, $sensitive_info,
+                    $reversible_actions, $view_actions);
+        } else {
+            $actions = array();
+        }
+    }
+
+    return $actions;
 }
 
 // Handles textblock security.
@@ -254,7 +353,7 @@ function security_textblock($user, $action, $textblock) {
             }
 
         case 'sensitive-info':
-            return ($usersec == 'admin' || $usersec == 'helper');
+            return ($usersec == 'admin' || $usersec == 'helper' || $usersec == 'helper');
 
         // Reversible modifications.
         case 'simple-rev-edit':

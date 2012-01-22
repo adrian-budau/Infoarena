@@ -34,12 +34,14 @@ class :ui:link extends :ui:element {
     attribute
         bool highlight_accesskey = true,    // Whether or not to highlight the
                                             // link's accesskey if specified.
+        string confirm_request = "",
         :a;
 
     protected function render() {
         $elem = <a>{$this->getChildren()}</a>;
-
+        $confirm_request = $this -> getAttribute('confirm_request');
         $accesskey = $this->getAttribute('accesskey');
+
         if ($accesskey && $this->getAttribute('highlight_accesskey')) {
             // This assumes that no HTML tags are present inside the link.
             // If these are present, they will be escaped.
@@ -50,6 +52,9 @@ class :ui:link extends :ui:element {
                     </a>;
         }
 
+        if ($confirm_request) {
+            $elem -> setAttribute('onclick', "return confirm ('" . $confirm_request . "')");
+        }
         $this -> sendAttributes($elem);
         return $elem;
     }
@@ -88,7 +93,7 @@ class :ui:link:user extends :ui:link {
         $this -> setAttribute('href', $href);
 
         foreach ($this -> getChildren() as $child) {
-            $this -> sendAttributes($child);
+            $this -> sendAttributes($child, 'user');
         }
         return :ui:link::render();
     }

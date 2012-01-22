@@ -1,11 +1,6 @@
 <?php
 
 class :ui:element extends :x:element {
-    attribute
-        string name,
-        string id,
-        string class,
-        string access_key;
     // TODO: facebook was doing cool stuff with CSS margin and padding in ui
     // elements
 

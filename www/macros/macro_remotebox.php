@@ -17,13 +17,15 @@ function macro_remotebox($url, $bypass_security = false) {
         return macro_error('Expecting argument `url`');
     }
 
-    $buffer = '';
-    $buffer .= '<div id="remotebox">remote content</div>';
-    $buffer .= '<script type="text/javascript">RemoteBox_Url="';
-    $buffer .= html_escape($url);
-    $buffer .= '";</script>';
+    $remotebox =
+      <x:frag>
+        <div id="remotebox">remote content</div>
+        <script type="text/javascript">
+          {HTML('RemoteBox_Url="' . html_escape($url) . '"')}
+        </script>
+      </x:frag>;
 
-    return $buffer;
+    return $remotebox;
 }
 
 ?>

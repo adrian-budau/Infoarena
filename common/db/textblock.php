@@ -117,9 +117,11 @@ function textblock_complex_query($options)
         $field_list .= ", `text`";
     }
 
+    //FIXME: get username as username and full_name as full_mame, no conflicts here so why mess up?
     // Add a join for username.
     if (getattr($options, 'username', false) == true) {
-        $field_list .= ", `username` as `user_name`, `full_name` as `user_fullname`, rating_cache";
+        $field_list .= ", `username` as `user_name`, `full_name` as `user_fullname`, rating_cache"
+                . ", security_level, avatar_timestamp";
         $join = "LEFT JOIN ia_user ON `user_id` = `ia_user`.`id`";
     } else {
         $join = "";
@@ -234,11 +236,11 @@ function textblock_get_revision_count($name) {
     $name = normalize_page_name($name);
     log_assert(is_normal_page_name($name));
 
-    $query = sprintf("SELECT COUNT(*) AS `cnt` FROM ia_textblock_revision
+    $query = sprintf("SELECT COUNT(*) AS `count` FROM ia_textblock_revision
                       WHERE `name` = '%s'",
                     db_escape(strtolower($name)));
     $row = db_fetch($query);
-    return $row['cnt'] + 1;
+    return $row['count'] + 1;
 }
 
 // Grep through textblocks. This is mostly a hack needed for macro_grep.php

@@ -4,22 +4,23 @@ require_once(IA_ROOT_DIR . 'www/xhp/ui/base.php');
 
 class :ui:form_field extends :ui:element {
     attribute
+        :input,
         bool label=true,
         enum { "integer", "string", "password", "float", "datetime", "bool",
                 "enum", "set", "checkbox" } type @required,
         enum { "normal", "reversed" } order = "normal",
+        string accesskey,
         string checked,
         string error,
-        string description,
-        string value;
+        string description;
 
     protected function render() {
         // Setting the label for the form field
         if ($this -> getAttribute('label') == true && array_key_exists(0, $this -> getChildren())) {
             $label =
               <label for={'form_' . $this -> getAttribute('name')}
-                accesskey={$this -> getAttribute('access_key')}>
-                <ui:highlight_accesskey accesskey ={$this -> getAttribute('access_key')}>
+                accesskey={$this -> getAttribute('accesskey')}>
+                <ui:highlight_accesskey accesskey ={$this -> getAttribute('accesskey')}>
                   {$this -> getChildren()}
                 </ui:highlight_accesskey>
               </label>;

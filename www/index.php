@@ -324,7 +324,7 @@ else if (IA_NEWSLETTER_TEXTBLOCK_PREFIX == $urlstart.'/'
 // general textblock view
 else if ($action == 'view') {
     require_once(IA_ROOT_DIR.'www/controllers/textblock.php');
-    controller_textblock_view($page, request('revision'));
+    controller_textblock_render($page, request('revision'));
 }
 
 // invalid URL

@@ -147,7 +147,7 @@ class :ia:footer extends :x:element {
     protected function render() {
         $elem =
           <div id="footer">
-            <ul class="clear">
+            <ui:list class="clear">
               <li class="copyright">&copy;&nbsp;2004-{date("Y")}&nbsp;
                 <ui:link href={url_textblock('Asociatia-infoarena')}>
                   Asociatia infoarena
@@ -156,33 +156,29 @@ class :ia:footer extends :x:element {
               <li class="separate">
                 <ui:link href={url_home()}>Prima pagina</ui:link>
               </li>
-              <li>
-                <ui:link href={url_textblock('despre-infoarena')}>
-                  Despre infoarena
-                </ui:link>
-              </li>
-              <li>
-                <ui:link href={url_textblock('termeni-si-conditii')}>
-                  Termeni si conditii
-                </ui:link>
-              </li>
-              <li>
-                <ui:link href={url_textblock('contact')}>Contact</ui:link>
-              </li>
+              <ui:link href={url_textblock('despre-infoarena')}>
+                Despre infoarena
+              </ui:link>
+              <ui:link href={url_textblock('termeni-si-conditii')}>
+                Termeni si conditii
+              </ui:link>
+              <ui:link href={url_textblock('contact')}>
+                Contact
+              </ui:link>
               <li class="top">
                 <ui:link href="#header">
                   Sari la inceputul paginii &uarr;
                 </ui:link>
               </li>
-            </ul>
+            </ui:list>
           </div>;
 
         if (!IA_DEVELOPMENT_MODE) {
             $elem->appendChild(
             <p class="cc">
               {HTML('<!--Creative Commons License-->')}
-              <a class="badge" rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/"><img alt="Creative Commons License" src={url_static('images/CreativeCommonsBadge.png')} /></a>
-              Cu exceptia cazurilor in care se specifica altfel, continutul site-ului infoarena<br/>este publicat sub licenta <a rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/">Creative Commons Attribution-NonCommercial 2.5</a>.
+              <ui:link class="badge" rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/"><img alt="Creative Commons License" src={url_static('images/CreativeCommonsBadge.png')} /></ui:link>
+              Cu exceptia cazurilor in care se specifica altfel, continutul site-ului infoarena<br/>este publicat sub licenta <ui:link rel="license" href="http://creativecommons.org/licenses/by-nc/2.5/">Creative Commons Attribution-NonCommercial 2.5</ui:link>.
               {HTML('<!--/Creative Commons License-->
                 <rdf:RDF xmlns="http://web.resource.org/cc/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
                   <Work rdf:about="">

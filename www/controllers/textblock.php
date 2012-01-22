@@ -1,13 +1,56 @@
 <?php
 
-require_once(IA_ROOT_DIR . "www/format/pager.php");
-require_once(IA_ROOT_DIR . "common/db/textblock.php");
-require_once(IA_ROOT_DIR . "common/textblock.php");
-require_once(IA_ROOT_DIR . "common/diff.php");
+require_once(IA_ROOT_DIR . 'www/format/pager.php');
+require_once(IA_ROOT_DIR . 'common/db/textblock.php');
+require_once(IA_ROOT_DIR . 'common/textblock.php');
+require_once(IA_ROOT_DIR . 'common/diff.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/textblock.php');
+function controller_textblock_render($page_name, $revision_number = null) {
+    $current_page = textblock_get_revision($page_name);
 
+    if ($current_page) {
+        $revision_count = textblock_get_revision_count($page_name);
 
-// View a plain textblock.
-// That textblock can be owned by something else.
+        if ($revision_number && $revision_number != $revision_count) {
+            if (!is_numeric($revision_number) || (int)$revision_number < 1) {
+                flash_error('Revizia "' . $revision_number . '" este invalida.');
+                redirect(url_textblock($page_name));
+            } else {
+                $reivison_number = (int)$revision_number;
+            }
+
+            identity_require("textblock-history", $current_page);
+            $page = textblock_get_revision($page_name, $revision_number);
+
+            if (!$page) {
+                flash_error('Revizia "' . $revision_number . '" nu exista.');
+                redirect(url_textblock($page_name));
+            }
+        } else {
+            identity_require('textblock-view', $current_page);
+            $page = $current_page;
+        }
+    } else {
+        // Missing page
+        flash_error("Nu exista pagina, dar poti sa o creezi ...");
+        redirect(url_textblock_edit($page_name));
+    }
+
+    log_assert_valid(textblock_validate($page));
+
+    $page['type'] = 'textblock';
+    $page['text'] = wiki_process_textblock($page);
+    $permitted_actions = identity_actions($page);
+
+    $textblock =
+      <ui:textblock textblock={$page} show_forum={true} revision={$revision_number}
+          revision_count={$revision_count} permitted_actions={$permitted_actions} />;
+
+    execute_render_die($textblock, $page['title']);
+}
+
+// DEPRECATED
+// FIXME: remove this once the newsletter is rewritten in XHP too
 function controller_textblock_view($page_name, $rev_num = null,
         $display_view = 'views/textblock_view.php') {
     global $identity_user;

@@ -3,6 +3,7 @@
 
 require_once(IA_ROOT_DIR . 'www/xhp/ia/login_form.php');
 require_once(IA_ROOT_DIR . 'www/xhp/ui/list.php');
+require_once(IA_ROOT_DIR . 'www/wiki/wiki.php');
 
 class :ia:left-col extends :x:element {
     attribute

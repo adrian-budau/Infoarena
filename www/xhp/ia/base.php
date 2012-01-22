@@ -4,7 +4,7 @@
 
 require_once(IA_ROOT_DIR . 'www/xhp/ia/sitewide.php');
 
-class :ia:page extends :x:element {
+class :ia:page extends :ui:element {
     attribute
         array user,
         string title = "infoarena",
@@ -20,7 +20,7 @@ class :ia:page extends :x:element {
     children ((:meta | :link | :script)*,
               :ia:header?, :ia:top-navbar?, :ia:left-col?,
               :ui:breadcrumbs?, :ui:flash-message?, :ia:footer?,
-              :ia:content);
+              :ia:content, :ia:log?);
 
     protected function render() {
         $default_css = array(
@@ -75,12 +75,8 @@ class :ia:page extends :x:element {
         }
 
         // Forward the user attribute down to the children that require it.
-        $user = $this->getAttribute('user');
         foreach ($this->getChildren() as $child) {
-            $child_attributes = $child->__xhpAttributeDeclaration();
-            if (array_key_exists('user', $child_attributes)) {
-                $child->setAttribute('user', $user);
-            }
+            $this -> sendAttributes($child, 'user');
         }
 
         // Render the document
@@ -114,6 +110,7 @@ class :ia:page extends :x:element {
               </div>
             </div>
             {$this->getChildren('ia:footer')}
+            {$this -> getChildren('ia:log')}
           </body>;
 
         return

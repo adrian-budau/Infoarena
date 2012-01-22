@@ -10,6 +10,13 @@ function get_macro_include_file($macro_name)
 // Format an error message as a html div.
 // Can be returned from macros.
 function macro_error($text, $raw_html = false) {
+    $error = <div class="macroError" />;
+    if ($raw_html) {
+        $error -> appendChild(<x:frag>HTML($text)</x:frag>);
+    } else {
+        $error -> appendChild(<x:frag> {$text} </x:frag>);
+    }
+    return $error;
     return '<div class="macroError">' . ($raw_html ? $text : html_escape($text)) . '</div>';
 }
 

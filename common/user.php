@@ -103,15 +103,25 @@ function user_validate($user) {
     } else if ($user['newsletter'] != '0' && $user['newsletter'] != '1') {
         $errors['newsletter'] = "Se accepta doar 0/1";
     }
-    
+
     return $errors;
 }
 
-function user_is_admin($user) {
+/**
+ * Checks if the user is an admin
+ * the second parameter is used to tell if it's just for formality( such as
+ * <ui:user:* /> tags which do not have any effect on the database
+ * @param  string  $user
+ * @param  bool    @validate
+ * @return bool
+ */
+function user_is_admin($user, $validate = true) {
     if (!$user) {
         return false;
     }
-    log_assert_valid(user_validate($user));
+    if ($validate == true) {
+        log_assert_valid(user_validate($user));
+    }
     return $user['security_level'] === 'admin';
 }
 

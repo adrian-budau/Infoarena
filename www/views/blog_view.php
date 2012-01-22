@@ -2,6 +2,7 @@
 
 require_once(IA_ROOT_DIR.'www/wiki/wiki.php');
 require_once(IA_ROOT_DIR.'www/macros/macro_smfcomments.php');
+require_once(IA_ROOT_DIR.'www/xhp/ia/blog.php');
 
 // site header
 include('header.php');
@@ -9,6 +10,7 @@ include('header.php');
 // wiki page header (actions)
 include('textblock_header.php');
 
+echo <ia:blog:post textblock={$textblock}/>;
 // blog sidebar
 echo '<div class="blog-sidebar">';
 wiki_include(IA_BLOG_SIDEBAR);
@@ -20,10 +22,15 @@ if (getattr($view, 'revision')) {
 }
 
 // blog content
-echo '<div class="wiki_text_block">';
 echo '<div class="blog">';
+echo '<div class="wiki_text_block">';
 $text = wiki_process_textblock($textblock);
-echo hijack_title($text, null, $textblock['title']);
+// FIXME:
+// Why do we need to hijack title to remove links? It's obvious the ones writing blog
+// posts won't put links there and even if that would happen this hijack would render
+// something like <h1> &lt;a href=.....
+
+//echo hijack_title($text, null, $textblock['title']);
 echo $text;
 echo '<div class="strap">';
 echo '<strong>Categorii: </strong>';
