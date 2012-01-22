@@ -17,7 +17,6 @@ function macro_error($text, $raw_html = false) {
         $error -> appendChild(<x:frag> {$text} </x:frag>);
     }
     return $error;
-    return '<div class="macroError">' . ($raw_html ? $text : html_escape($text)) . '</div>';
 }
 
 // Format message as a html div.

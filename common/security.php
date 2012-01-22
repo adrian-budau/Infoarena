@@ -353,7 +353,7 @@ function security_textblock($user, $action, $textblock) {
             }
 
         case 'sensitive-info':
-            return ($usersec == 'admin' || $usersec == 'helper' || $usersec == 'helper');
+            return ($usersec == 'admin' || $usersec == 'intern' || $usersec == 'helper');
 
         // Reversible modifications.
         case 'simple-rev-edit':

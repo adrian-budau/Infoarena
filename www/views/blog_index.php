@@ -40,7 +40,7 @@ foreach ($subpages as $subpage) {
     echo '&nbsp;<a href="'.url_textblock($subpage['name']).'#comentarii">Comentarii ('.$subpage['comment_count'].')</a>';
     echo '</p>';
 
-    // Use better words for classes maybe?
+    // FIXME: Use better words for classes maybe?
     // Also display tags
     echo '<div class="strap">';
     echo '<strong>Categorii: </strong>';
