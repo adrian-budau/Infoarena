@@ -9,6 +9,7 @@ class :ui:textblock extends :ui:element {
     children empty;
 
     attribute
+        :div,
         array textblock @required,
         bool show_forum = true,
         int revision = 0,
@@ -42,13 +43,15 @@ class :ui:textblock extends :ui:element {
             $element -> appendChild($warning);
         }
 
-        $element -> appendChild(<div class="wiki_text_block"> {HTML($textblock['text'])} </div>);
+        $div = <div class="wiki_text_block"> {HTML($textblock['text'])} </div>;
+        $this -> sendAttributes($div);
+
+        $element -> appendChild($div);
 
         if ($show_forum == true && $textblock['forum_topic']) {
             $element -> appendChild(macro_smfcommects(array('topic' => $textblock['forum_topic'],
                                                             'display' => 'hide')));
         }
-
         return $element;
     }
 }
@@ -65,6 +68,7 @@ class :ui:textblock:actions extends :ui:element {
         $textblock = $this -> getAttribute('textblock');
         $actions = <ui:list /> ;
 
+        log_print_r($permitted_actions);
         if (in_array('edit', $permitted_actions)) {
            $actions -> appendChild(<ui:link accesskey="e" href={url_textblock_edit($textblock['name'])}> Editează </ui:link>);
         }
@@ -90,7 +94,7 @@ class :ui:textblock:actions extends :ui:element {
             $actions -> appendChild(<ui:link accesskey="t" href={url_attachment_new($textblock['name'])}> Ataşează </ui:link>);
         }
 
-        if (in_array('attach-list', $permitted_actions)) {
+        if (in_array('list-attach', $permitted_actions)) {
             $actions -> appendChild(<ui:link accesskey="l" href={url_attachment_list($textblock['name'])}> Listează ataşamente </ui:link>);
         }
 

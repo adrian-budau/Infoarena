@@ -8,7 +8,6 @@ require_once(IA_ROOT_DIR . 'www/views/utilities.php');
 class :ia:login-form extends :ui:form {
 
     protected function render() {
-        // FIXME: remove old style global form_values and form_errors
         $this -> setAttribute('action', url_login());
         $this -> setAttribute('method', 'post');
         $this -> setAttribute('class', 'login');

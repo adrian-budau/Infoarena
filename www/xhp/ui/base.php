@@ -13,8 +13,16 @@ class :ui:element extends :x:element {
             foreach ($attributes as $attribute) {
                 $this -> sendAttributes($destination, $attribute);
             }
-        } elseif ($this -> getAttribute($attributes) && method_exists($destination, 'hasAttribute') && $destination -> hasAttribute($attributes)) {
-                $destination -> setAttribute($attributes, $this -> getAttribute($attributes));
+        } elseif ($this -> getAttribute($attributes) &&
+                  method_exists($destination, 'hasAttribute') &&
+                  $destination -> hasAttribute($attributes)) {
+
+                if ($attributes == 'class') {
+                    $destination -> addClass($this -> getAttribute('class'));
+                } else {
+                    $destination -> setAttribute($attributes,
+                        $this -> getAttribute($attributes));
+                }
         }
     }
 }

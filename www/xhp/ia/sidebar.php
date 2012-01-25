@@ -4,6 +4,7 @@
 require_once(IA_ROOT_DIR . 'www/xhp/ia/login_form.php');
 require_once(IA_ROOT_DIR . 'www/xhp/ui/list.php');
 require_once(IA_ROOT_DIR . 'www/wiki/wiki.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/textblock.php');
 
 class :ia:left-col extends :x:element {
     attribute
@@ -104,13 +105,10 @@ class :ia:sidebar-ad extends :x:element {
             return <x:frag />;
         }
 
-        // FIXME: add XHP support
+        $sidebar['text'] = wiki_process_textblock($sidebar);
+
         return
-          <div class="ad">
-            <div class="wiki_text_block">
-              {HTML(wiki_process_textblock($sidebar))}
-            </div>
-          </div>;
+          <ui:textblock class="ad" show_forum={false} textblock={$sidebar} />;
     }
 }
 
