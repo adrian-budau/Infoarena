@@ -340,13 +340,7 @@ function execute_render_die($content, $title = null,
  * @param   string  $view_file_name
  * @param   array   $view
  */
-function execute_view_die($view_file_name, $view) {
-    $_xhp_page = default_view_compose(
-        getattr($view, 'title'),
-        getattr($view, 'topnav_select', 'infoarena'),
-        getattr($view, 'no_sidebar_login', false),
-        getattr($view, 'charset', 'UTF-8'));
-
+function execute_view_die($view_file_name, $view, $simple = false) {
     require_once(IA_ROOT_DIR . 'www/views/utilities.php');
     // Expand $view members into global scope
     $GLOBALS['view'] = $view;
@@ -358,6 +352,19 @@ function execute_view_die($view_file_name, $view) {
         $GLOBALS[$view_hash_key] = $view_hash_value;
         $$view_hash_key = $view_hash_value;
     }
+
+    if ($simple == true) {
+        include($view_file_name);
+        session_write_close();
+        die();
+        return;
+    }
+
+    $_xhp_page = default_view_compose(
+        getattr($view, 'title'),
+        getattr($view, 'topnav_select', 'infoarena'),
+        getattr($view, 'no_sidebar_login', false),
+        getattr($view, 'charset', 'UTF-8'));
 
     ob_start();
     include($view_file_name);

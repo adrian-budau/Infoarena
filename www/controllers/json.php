@@ -39,7 +39,7 @@ function controller_json($suburl) {
             );
 
             // output JSON
-            execute_view_die('views/json.php', $view);
+            execute_view_die('views/json.php', $view, true);
 
         case 'task-get-rounds':
             // Return list of parent rounds for a task
@@ -57,7 +57,7 @@ function controller_json($suburl) {
             );
 
             // Output JSON
-            execute_view_die('views/json.php', $view);
+            execute_view_die('views/json.php', $view, true);
         default:
             die_http_error(400, 'Actiune invalida.');
     }

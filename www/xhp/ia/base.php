@@ -49,6 +49,7 @@ class :ia:page extends :ui:element {
             'foreach.js',
             'sorttable.js',
             'tablednd.js',
+            'wikiedit.js',
             <script type="text/javascript">
               {"Sh_Init('" . url_static('swf/clipboard.swf') . "')"}
             </script>,
