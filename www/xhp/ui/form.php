@@ -2,15 +2,87 @@
 
 require_once(IA_ROOT_DIR . 'www/xhp/ui/base.php');
 
-class :ui:form_field extends :ui:element {
+class :ui:form extends :ui:element {
     attribute
-        :input,
+        :form,
+        string legend = "",
+        string imageURL = "",
+        array values,
+        array errors,
+        array descriptions,
+        enum { "list", "inline" } type = "list";
+
+    protected function render() {
+        $legend = $this -> getAttribute('legend');
+        $imageURL = $this -> getAttribute('imageURL');
+        $values = $this -> getAttribute('values');
+        $errors = $this -> getAttribute('errors');
+        $descriptions = $this -> getAttribute('descriptions');
+        $type = $this -> getAttribute('type');
+
+        foreach($this -> getChildren() as $child) {
+            if ($child instanceof :ui:form_field) {
+                $name = $child -> getAttribute('name');
+
+                if ($value = getattr($values, $name, '')) {
+                    $child -> setAttribute('value', $value);
+                }
+
+                if ($error = getattr($errors, $name, '')) {
+                    $child -> setAttribute('error', $error);
+                }
+
+                if ($description = getattr($descriptions, $name, '')) {
+                    $child -> setAttribute('description', $description);
+                }
+            }
+        }
+
+        if ($legend || $imageURL) {
+            $title = <legend />;
+            if ($imageURL) {
+                $title -> appendChild(<img src={$imageURL} alt="!" />);
+            }
+
+            if ($legend) {
+                $title -> appendChild(<x:frag>{$legend}</x:frag>);
+            }
+        } else {
+            $title = <x:frag />;
+        }
+
+        if ($type == 'list') {
+            $container =
+              <ui:list class="form">
+                {$this -> getChildren()}
+              </ui:list>;
+        } else {
+            $container =
+              <x:frag>
+                {$this -> getChildren()}
+              </x:frag>;
+        }
+
+        $form =
+          <form>
+            <fieldset>
+              {$title}
+              {$container}
+            </fieldset>
+          </form>;
+
+        $this -> sendAttributes($form);
+
+        return $form;
+    }
+}
+
+abstract class :ui:form_field extends :ui:element {
+    attribute
+        var editor,
         bool label=true,
-        enum { "integer", "string", "password", "float", "datetime", "bool",
-                "enum", "set", "checkbox" } type @required,
         enum { "normal", "reversed" } order = "normal",
         string accesskey,
-        string checked,
         string error,
         string description;
 
@@ -38,28 +110,8 @@ class :ui:form_field extends :ui:element {
             $error = <x:frag />;
         }
 
-        // Setting the editor(input or select)
-        $type = $this -> getAttribute('type');
-        if ($type == 'integer' || $type == 'string' || $type == 'float' ||
-            $type == 'datetime' || $type == 'password') {
-            $editor =
-              <input name={$this -> getAttribute('name')}
-                  id={'form_' . $this -> getAttribute('name')}
-                  value={$this -> getAttribute('value')} />;
-
-            if ($type == 'password') {
-                $editor -> setAttribute('type', 'password');
-            } else {
-                $editor -> setAttribute('type', 'text');
-            }
-        } else if($type == 'checkbox') {
-            $editor =
-            <input name={$this -> getAttribute('name')}
-                type="checkbox"
-                id={'form_' . $this -> getAttribute('name')}
-                value={$this -> getAttribute('value')}
-                checked={$this -> getAttribute('checked')} />;
-        }
+        // Getting the editor
+        $editor = $this -> getAttribute('editor');
 
         // Any extra description
         if ($this -> getAttribute('description')) {
@@ -73,7 +125,7 @@ class :ui:form_field extends :ui:element {
 
         // Classes
         $editor -> setAttribute('class', $this -> getAttribute('class'));
-        $label -> setAttribute('class', $this -> getAttribute('class'));
+        $this -> sendAttributes($label, 'class');
 
         if ($this -> getAttribute('order') == "normal") {
             return
@@ -95,3 +147,37 @@ class :ui:form_field extends :ui:element {
     }
 }
 
+class :ui:form:input extends :ui:form_field {
+    attribute
+        :input,
+        enum { "text", "password" } type = "text";
+
+    protected function render() {
+        $editor =
+          <input name={$this -> getAttribute('name')}
+              id={'form_' . $this -> getAttribute('name')}
+              value={$this -> getAttribute('value')}
+              type={$this -> getAttribute('type')} />;
+
+        $this -> setAttribute('editor', $editor);
+        return :ui:form_field::render();
+    }
+}
+
+class :ui:form:checkbox extends :ui:form_field {
+    attribute
+        :input;
+
+    protected function render() {
+        $editor =
+          <input name={$this -> getAttribute('name')}
+              id={'form_' . $this -> getAttribute('name')}
+              checked={$this -> getAttribute('value')}
+              type="checkbox" />;
+
+
+        $this -> sendAttributes($editor, 'checked');
+        $this -> setAttribute('editor', $editor);
+        return :ui:form_field::render();
+    }
+}

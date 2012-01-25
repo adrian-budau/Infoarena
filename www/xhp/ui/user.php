@@ -2,7 +2,7 @@
 
 require_once(IA_ROOT_DIR . 'www/xhp/ui/base.php');
 require_once(IA_ROOT_DIR . 'www/format/format.php');
-class :ui:user extends :ui:element {
+abstract class :ui:user extends :ui:element {
     attribute
         array user;
 }

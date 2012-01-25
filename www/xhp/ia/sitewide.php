@@ -35,7 +35,7 @@ class :ia:header:userbox extends :x:element {
 
               <br />
 
-              <ui:link:post href={url_logout()} class="logout" post_data={array()}>
+              <ui:link:post href={url_logout()} class="logout" post_data={array()} accesskey="l">
                 logout
               </ui:link:post>
               |

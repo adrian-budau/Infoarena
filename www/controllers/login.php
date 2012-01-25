@@ -1,6 +1,7 @@
 <?php
 
-require_once(IA_ROOT_DIR . "common/db/user.php");
+require_once(IA_ROOT_DIR . 'common/db/user.php');
+require_once(IA_ROOT_DIR . 'www/xhp/ui/textblock.php');
 
 function controller_login() {
     global $identity_user;
@@ -81,14 +82,31 @@ function controller_login() {
     // always reset password before displaying web form
     $data['password'] = '';
 
-    $view['page_name'] = "login";
-    $view['title'] = "Autentificare";
-    $view['form_values'] = $data;
-    $view['form_errors'] = array();
-    $view['topnav_select'] = 'login';
-    $view['no_sidebar_login'] = true;
+    $textblock = textblock_get_revision('template/login');
+    log_assert($textblock, "Pagina template/login lipseste");
+    $textblock['text'] = wiki_process_textblock($textblock);
 
-    execute_view_die('views/login.php', $view);
+    $login_form =
+      <x:frag>
+        <h1>
+          Autentificare
+        </h1>
+        <p>
+          Daca nu esti inregistrat deja, te poti
+          <ui:link href={url_register()}>
+            inregistra aici
+          </ui:link>
+          ; daca ti-ai uitat parola, o poti
+          <ui:link href={url_resetpass()}>
+            reseta aici
+          </ui:link>
+          .
+        </p>
+        <ia:login_form values={$data}/>
+        <ui:textblock textblock={$textblock} show_forum={false} />
+      </x:frag>;
+
+    execute_render_die($login_form, 'Autentificare', 'login', true);
 }
 
 ?>

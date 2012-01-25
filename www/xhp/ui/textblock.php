@@ -24,8 +24,10 @@ class :ui:textblock extends :ui:element {
 
         $element = <x:frag />;
 
-        $element -> appendChild(<ui:textblock:actions textblock={$textblock}
-                                    permitted_actions={$permitted_actions} />);
+        if (is_array($permitted_actions)) {
+            $element -> appendChild(<ui:textblock:actions textblock={$textblock}
+                                        permitted_actions={$permitted_actions} />);
+        }
 
         // Show revision warning in case we show a revision
         if ($revision != 0 && $revision_count != 0) {
