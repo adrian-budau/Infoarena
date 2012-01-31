@@ -1,4 +1,7 @@
 <form action="<?= html_escape(url_login()) ?>" method="post" class="login">
+<table class="form">
+  <tr>
+    <td>
 <fieldset>
     <legend><img src="<?= html_escape(url_static('images/icons/login.png')) ?>" alt="!" /> Autentificare</legend>
     <ul class="form">
@@ -22,5 +25,33 @@
         </li>
     </ul>
 </fieldset>
+    </td>
+<?php
+if (isset($view['captcha'])) {
+?>
+    <td>
+<fieldset>
+    <legend>Verificare</legend>
+    <ul class="form">
+        <li>
+            <script type="text/javascript">
+                var RecaptchaOptions = {
+                theme : 'clean',
+                };
+            </script>
+
+            <label>Scrieti cuvintele de mai jos:</label>
+            <?= ferr_span('captcha') ?>
+            <?= $view['captcha'] ?>
+            <span class="fieldHelp">Va rugam sa transcrieti cuvintele de mai sus in aceasta casuta pentru verificare</span>
+        </li>
+    </ul>
+</fieldset>
+    </td>
+<?php
+    }
+?>
+</tr>
+</table>
 </form>
 

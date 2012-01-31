@@ -1,0 +1,11 @@
+#! /usr/bin/env php
+<?php
+
+require_once(dirname($argv[0]) . '/utilities.php');
+require_once(IA_ROOT_DIR . 'common/db/db.php');
+
+db_connect();
+
+$query = "CREATE TABLE IF NOT EXISTS ia_tokens (`ip` VARCHAR(64) NOT NULL, `tokens` INT NOT NULL, PRIMARY KEY (ip))";
+db_query($query);
+?>
