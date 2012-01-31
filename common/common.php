@@ -377,7 +377,8 @@ if (function_exists("date_default_timezone_set")) {
 function is_connection_secure() {
     $https = getattr($_SERVER, 'HTTPS', null);
 
-    if ($https == 'on' || $https == '1' || $_SERVER['SERVER_PORT'] == 443) {
+    if ($https == 'on' || $https == '1' ||
+            getattr($_SERVER, 'SERVER_PORT', 80) == 443) {
         return true;
     }
     return false;
