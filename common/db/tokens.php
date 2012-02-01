@@ -21,6 +21,16 @@ function get_tokens($identifier = null) {
         return $tokens[$identifier][0];
     }
 
+    // If we are working in development mode we always get double the
+    // maximum tokens so captchas become useless. Left like this so we
+    // can track token errors in development mode
+    // We may have actions which require captcha all the time(such as register)
+    // which would have the cost IA_TOKENS_MAX + 1
+    if (IA_DEVELOPMENT_MODE) {
+        $tokens[$identifier][0] = $tokens[$identifier][1] =
+            2 * IA_TOKENS_MAX;
+        return 2 * IA_TOKENS_MAX;
+    }
     $query = sprintf("SELECT tokens FROM ia_tokens WHERE `identifier` = '%s' "
             . "AND timestamp > '%s'", db_escape($identifier),
             db_escape(db_date_format(time() - IA_TOKENS_REGEN)));
