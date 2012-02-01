@@ -20,9 +20,6 @@
             <input type="checkbox" value="on" id="form_remember" name="remember" class="checkbox"<?= fval('remember') ? ' checked="checked"' : '' ?>/>
             <label class="checkbox" for="form_remember">Pastreaza-ma autentificat 5 zile</label>
         </li>
-        <li>
-            <input type="submit" value="Autentificare" id="form_submit" class="button important" />
-        </li>
     </ul>
 </fieldset>
     </td>
@@ -53,5 +50,10 @@ if (isset($view['captcha'])) {
 ?>
 </tr>
 </table>
+<ul class="form clear">
+  <li>
+    <input type="submit" value="Autentificare" id="form_submit" class="button important" />
+  </li>
+</ul>
 </form>
 

@@ -42,12 +42,11 @@ function controller_login() {
             }
         }
 
-        // We won't give any tokens to a wrong login attempt
-        if (($form_errors['captcha'] = check_captcha_for_tokens()) == '') {
-            if ($errors) {
-                pay_tokens(IA_TOKENS_MAX);
-            }
-        };
+        // Get some tokens from the captcha
+        // It's not like that matters in any way because we do not receive
+        // enough for the login cost
+        $form_errors['captcha'] = check_captcha_for_tokens();
+
         // obtain referer
         $referer = getattr($_SERVER, 'HTTP_REFERER', '');
         if ($referer == url_login()) {
@@ -56,14 +55,17 @@ function controller_login() {
         }
 
         // pay tokens for loging in
-        if (get_tokens() <= IA_TOKENS_LOGIN) {
-            if (!$errors) {
+        if (!pay_tokens(IA_TOKENS_LOGIN)) {
+            if ($form_errors['captcha']) {
                 $errors = 'Va rugam confirmati ca sunteti om';
+                unset($form_errors['captcha']);
             }
         }
 
         // process
         if (!$errors) {
+            // good user receives some tokens back enough to logout and login as a different user
+            pay_tokens(-IA_TOKENS_LOGIN);
             // persist user to session (login)
             $remember_user = ($data['remember'] ? true : false);
             identity_start_session($user, $remember_user);
@@ -87,8 +89,6 @@ function controller_login() {
             }
         }
         else {
-            // wrong login, pay tokens
-            pay_tokens(IA_TOKENS_LOGIN);
             // save referer so we know where to redirect when login finally
             // succeeds.
             if (!isset($_SESSION['_ia_redirect']) && $referer) {
@@ -109,7 +109,7 @@ function controller_login() {
     $view['topnav_select'] = 'login';
     $view['no_sidebar_login'] = true;
 
-    if (get_tokens() <= IA_TOKENS_LOGIN) {
+    if (get_tokens() < IA_TOKENS_LOGIN) {
         $view['captcha'] = recaptcha_get_html(IA_CAPTCHA_PUBLIC_KEY, null,
                 true);
     }

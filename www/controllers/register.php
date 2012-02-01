@@ -31,6 +31,7 @@ function controller_register() {
         $data['newsletter'] = (request('newsletter') ? 1 : 0);
         $data['tnc'] = (request('tnc') ? 1 : 0);
 
+        pay_tokens(IA_TOKENS_REGISTER);
         $errors = validate_register_data($data);
         // 2. process
         if (count($errors) == 0) {
@@ -43,11 +44,13 @@ function controller_register() {
             $user['newsletter'] = $data['newsletter'];
             // There are no acceptable errors in user_create.
             user_create($user, remote_ip_info());
+
+            // give user enough tokens to pass login without captcha
+            pay_tokens(-IA_TOKENS_LOGIN);
             flash("Felicitari! Contul a fost creat. Acum te poti "
                   ."autentifica.");
             redirect(url_login());
         } else {
-            pay_tokens(IA_TOKENS_REGISTER);
             flash_error('Am intalnit probleme. Verifica datele introduse.');
         }
     } else {
@@ -56,7 +59,7 @@ function controller_register() {
         $data['tnc'] = 1;
     }
 
-    if(get_tokens() <= IA_TOKENS_REGISTER) {
+    if(get_tokens() < IA_TOKENS_REGISTER) {
         $view['captcha'] = recaptcha_get_html(IA_CAPTCHA_PUBLIC_KEY, null,
                 true);
     }

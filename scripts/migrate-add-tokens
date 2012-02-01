@@ -6,6 +6,8 @@ require_once(IA_ROOT_DIR . 'common/db/db.php');
 
 db_connect();
 
-$query = "CREATE TABLE IF NOT EXISTS ia_tokens (`ip` VARCHAR(64) NOT NULL, `tokens` INT NOT NULL, PRIMARY KEY (ip))";
+$query = "CREATE TABLE IF NOT EXISTS ia_tokens (`identifier` VARCHAR(64) "
+       . "NOT NULL, `tokens` INT NOT NULL, `timestamp` DATETIME, PRIMARY KEY "
+       . "(identifier))";
 db_query($query);
 ?>

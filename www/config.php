@@ -70,10 +70,11 @@ define("IA_BLOG_SIDEBAR", "blog-sidebar");
 define("IA_LATEX_ENABLE", !IA_DEVELOPMENT_MODE);
 
 // Token constants
-define('IA_TOKENS_MAX', 1000000);
-define('IA_TOKENS_REGISTER', 1000000);
-define('IA_TOKENS_LOGIN', 200000);
-
+define('IA_TOKENS_MAX', 60);
+define('IA_TOKENS_REGISTER', 61);
+define('IA_TOKENS_CAPTCHA', 5);
+define('IA_TOKENS_LOGIN', 20);
+define('IA_TOKENS_REGEN', 60*60*5);
 // List of safe MIME types
 // FIXME: add more?
 $IA_SAFE_MIME_TYPES = array('image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/x-ms-bmp');

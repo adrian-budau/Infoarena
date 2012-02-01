@@ -7,12 +7,10 @@ require_once(IA_ROOT_DIR . 'common/db/tokens.php');
 function validate_register_data($data) {
     $errors = validate_user_data($data, true, null);
 
-    if (($captcha_error = check_captcha_for_tokens(true)) == '') {
-        if (count($errors) > 0) {
-            pay_tokens(IA_TOKENS_MAX);
-        }
-    } else {
-        $errors['captcha'] = $captcha_error;
+    // Give enough tokens back for a login
+    $errors['captcha'] = check_captcha_for_tokens(IA_TOKENS_CAPTCHA, true);
+    if (!$errors['captcha']) {
+        unset($errors['captcha']);
     }
 
     return $errors;
