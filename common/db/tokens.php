@@ -31,11 +31,20 @@ function get_tokens($identifier = null) {
             2 * IA_TOKENS_MAX;
         return 2 * IA_TOKENS_MAX;
     }
-    $query = sprintf("SELECT tokens FROM ia_tokens WHERE `identifier` = '%s' "
-            . "AND timestamp > '%s'", db_escape($identifier),
-            db_escape(db_date_format(time() - IA_TOKENS_REGEN)));
-    $tokens[$identifier][0] = $tokens[$identifier][1] =
-            db_query_value($query, IA_TOKENS_MAX);
+    $query = sprintf("SELECT tokens, timestamp FROM ia_tokens WHERE "
+            . "`identifier` = '%s'", db_escape($identifier));
+    $result = db_fetch($query);
+
+    // Receive the tokens and add the regenerated ones
+    if (count($result) > 0) {
+        $amount = min(IA_TOKENS_MAX, $result['tokens'] +
+            (time() - db_date_parse($result['timestamp'])) / IA_TOKENS_REGEN);
+    } else {
+        $amount = IA_TOKENS_MAX;
+    }
+
+    // Receive tokens for idle time
+    $tokens[$identifier][0] = $tokens[$identifier][1] = $amount;
     return $tokens[$identifier][0];
 }
 
@@ -118,7 +127,7 @@ function check_captcha_for_tokens($amount = IA_TOKENS_CAPTCHA, $required = false
     }
     if (IA_DEVELOPMENT_MODE) {
         pay_tokens(-IA_TOKENS_MAX, $identifier);
-        return 'Confirmati ca sunteti om';
+        return '';
     }
 
     $challenge = request('recaptcha_challenge_field');
