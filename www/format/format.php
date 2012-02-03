@@ -294,6 +294,9 @@ function format_date($date, $format = null) {
  */
 function format_social_buttons($textblock,
         $buttons = array('like', '+1', 'tweet')) {
+    if (IA_DEVELOPMENT_MODE == true) {
+        return '';
+    }
     $social = '<div class="social_buttons">';
 
     $url= urlencode(url_absolute(url_textblock($textblock['name'])));
