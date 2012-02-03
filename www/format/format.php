@@ -323,7 +323,7 @@ function format_social_buttons($textblock,
                 . 'ling="no" src="//platform.twitter.com/widgets/tweet_but'
                 . 'ton.html?count=vertical&url=' . $url . ' &text='
                 . rawurlencode($textblock['title']) . '%20' . $url .'&via='
-                . IA_TWITTER_ACCOUNT .'" style="width:55px; height: 60px; '
+                . IA_TWITTER_ACCOUNT .'" style="width:55px; height: 62px; '
                 . 'margin-left:5px"></iframe>';
     }
 
