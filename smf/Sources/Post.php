@@ -1403,7 +1403,7 @@ function Post2()
                 $post_errors[] = 'wrong_captcha';
         }
     }
-    
+
 	// Any mistakes?
 	if (!empty($post_errors))
 	{
