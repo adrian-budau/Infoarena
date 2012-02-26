@@ -1545,7 +1545,7 @@ table.sortable th {
 
 /* Make social buttons appear on the right */
 div.social_buttons {
-	    float:right;
-		    margin-left: 5px;
-			    height: 65px;
+    float:right;
+    margin-left: 5px;
+    height: 65px;
 }

@@ -109,7 +109,6 @@ function controller_blog_view($page_name, $rev_num = null) {
     }
 
 
-    //$meta_info[] = array('property' => '
     // Build view.
     $view = array();
     $view['topnav_select'] = 'blog';
@@ -124,7 +123,6 @@ function controller_blog_view($page_name, $rev_num = null) {
 
     if (!IA_DEVELOPMENT_MODE) {
         $view['meta_info'] = $meta_info;
-        $view['meta_type'] = 'blog';
     }
     // This emits a warning on the stripped database used by devs because
     // some revisions are missing. On the live database it should not.
