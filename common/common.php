@@ -370,7 +370,7 @@ if (function_exists("date_default_timezone_set")) {
 }
 
 /*
- * Checks weather the current connection is through the https request
+ * Checks whether the current connection is through the https request
  *
  * returns bool
  */

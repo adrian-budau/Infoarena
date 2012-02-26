@@ -121,7 +121,8 @@ function save_tokens($identifier = null, $amount = null) {
  * @param string $identifier
  * @return string
  */
-function check_captcha_for_tokens($amount = IA_TOKENS_CAPTCHA, $required = false, $identifier = null) {
+function check_captcha_for_tokens($amount = IA_TOKENS_CAPTCHA,
+                                  $required = false, $identifier = null) {
     if ($identifier == null) {
         $identifier = remote_ip_info();
     }
