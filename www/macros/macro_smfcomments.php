@@ -38,7 +38,7 @@ function macro_smfcomments($args) {
         }
     }
 
-    $url = IA_SMF_URL . '/ia_comments.php?topic_id=' . $topic_id . '&display=' . $display;
+    $url = url_forum() . '/ia_comments.php?topic_id=' . $topic_id . '&display=' . $display;
     if (!is_null($max_comm)) {
         $url .= '&max_comm=' . $max_comm;
     }
