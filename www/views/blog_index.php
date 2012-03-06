@@ -30,7 +30,7 @@ foreach ($subpages as $subpage) {
     }
 
     // Blog author and social buttons
-    echo format_blogpost_author($subpage);
+    echo format_blogpost_author($subpage, $subpage['title']);
     echo "<div class=\"wiki_text_block\">$text</div>";
 
     // Display comment link

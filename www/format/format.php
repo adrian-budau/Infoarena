@@ -294,11 +294,12 @@ function format_date($date, $format = null) {
 /**
  * Formats the Facebook, Google+ and Twitter social buttons
  *
- * @param string $textblock_name   The textblock
+ * @param array $textblock   The textblock
+ * @param string $title      The textblock's current title
  * @param array $buttons     Which buttons to display(like, +1 and/or tweet)
  * @return string
  */
-function format_social_buttons($textblock,
+function format_social_buttons($textblock, $title,
                                $buttons = array('like', '+1', 'tweet')) {
     if (IA_DEVELOPMENT_MODE) {
         return '';
@@ -327,7 +328,7 @@ function format_social_buttons($textblock,
         $social .= '<iframe allowtransparency="true" frameborder="0" scrol'
                 . 'ling="no" src="//platform.twitter.com/widgets/tweet_but'
                 . 'ton.html?count=vertical&url=' . html_escape(urlencode($url))
-                . ' &text=' . rawurlencode($textblock['title']) . '%20' . $url
+                . '&text=' . rawurlencode($title) . '%20'
                 .'&via=' . IA_TWITTER_ACCOUNT .'" style="width:55px; height: 6'
                 . '2px; margin-left:5px"></iframe>';
     }
@@ -341,11 +342,12 @@ function format_social_buttons($textblock,
  * Formats the blog post author
  *
  * @param array $blogpost    the blogpost textblock
+ * @param string $blogtitle  the current blogpost title
  * @return string
  */
-function format_blogpost_author($blogpost) {
+function format_blogpost_author($blogpost, $blogtitle) {
     $text = '<div class="strap blogheader">'
-          . format_social_buttons($blogpost)
+          . format_social_buttons($blogpost, $blogtitle)
           . format_user_avatar($blogpost['user_name'], 'forum')
           . '<br />'
           . format_user_link($blogpost['user_name'],

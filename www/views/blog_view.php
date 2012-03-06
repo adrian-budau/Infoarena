@@ -24,7 +24,7 @@ echo '<div class="wiki_text_block">';
 echo '<div class="blog">';
 $text = wiki_process_textblock($textblock);
 echo hijack_title($text, null, $textblock['title']);
-echo format_blogpost_author($first_textblock);
+echo format_blogpost_author($first_textblock, $textblock['title']);
 echo $text;
 echo '<div class="strap">';
 echo '<strong>Categorii: </strong>';
