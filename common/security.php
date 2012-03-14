@@ -432,7 +432,7 @@ function security_task($user, $action, $task) {
             return ($task['security'] != 'private' && $is_running);
 
         case 'grader-download':
-            return ($task['open_tests'] && $task['security'] != 'private')
+            return ($task['open_tests'] && $task['security'] == 'public')
                     || $is_boss;
 
         case 'sensitive-info':

@@ -226,8 +226,7 @@ function job_get_range_wheres($filters) {
     if (!is_null($score_end) && is_whole_number($score_end)) {
         $wheres[] = sprintf("(`job`.`score` <= '%s') AND (`round`.`public_eval` = 1)", db_escape($score_end));
     }
-    if (!is_null($task_security) &&
-            array_key_exists($task_security, task_get_security_types())) {
+    if (array_key_exists($task_security, task_get_security_types())) {
         $wheres[] = sprintf("`task`.`security` = %s",
             db_escape($task_security));
     }
