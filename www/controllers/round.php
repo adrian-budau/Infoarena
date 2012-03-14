@@ -284,8 +284,7 @@ function controller_round_task_order($round_id) {
 }
 
 // Creates a round. Minimalist
-function controller_round_create()
-{
+function controller_round_create() {
     global $identity_user;
 
     // Security check.
@@ -297,7 +296,6 @@ function controller_round_create()
 
     // Get form values
     $values['id'] = strtolower(request('id', ''));
-    // FIXME: type hidden
     $values['type'] = request('type', 'user-defined');
 
     if (request_is_post()) {
@@ -431,5 +429,3 @@ function controller_round_delete($round_id) {
     flash('Runda a fost stearsa.');
     redirect(url_home());
 }
-
-?>

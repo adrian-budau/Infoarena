@@ -70,7 +70,7 @@ function round_recompute_score($round_id) {
         (`user_id`, `round_id`, `score`)
         VALUES ";
     $first = true;
-    foreach($rows as $row) {
+    foreach ($rows as $row) {
         $user_id = $row['user_id'];
         $score = $row['score'];
 
@@ -118,7 +118,7 @@ function round_get_tasks($round_id, $first = 0, $count = null,
               "task.`title` AS `title`, ".
               "task.`page_name` AS `page_name`, ".
               "task.`source` AS `source`, ".
-              "task.`hidden` AS `hidden`, ".
+              "task.`security` AS `security`, ".
               "task.`type` AS `type`,
                task.`open_source` AS `open_source`,
                task.`open_tests` AS `open_tests`,
@@ -179,8 +179,7 @@ function round_get_tasks($round_id, $first = 0, $count = null,
     return $res;
 }
 
-function round_get_task_count($round_id, $user_id, $filter)
-{
+function round_get_task_count($round_id, $user_id, $filter) {
     if ($user_id && $filter) {
         $filter_clause = db_get_task_filter_clause($filter, 'ia_score_user_round_task');
         $query = sprintf("SELECT COUNT(*) FROM ia_round_task " .
@@ -237,7 +236,7 @@ function round_update_task_list($round_id, $old_tasks, $tasks) {
         db_query($query);
     }
 
-    foreach($old_tasks as $task) {
+    foreach ($old_tasks as $task) {
         // Update parent round cache for old tasks
         task_get_parent_rounds($task, true);
     }
@@ -254,7 +253,7 @@ function round_update_task_list($round_id, $old_tasks, $tasks) {
         $query = "INSERT INTO ia_round_task (round_id, task_id, order_id)
                   VALUES ". implode(', ', $values);
         db_query($query);
-        foreach($tasks as $task) {
+        foreach ($tasks as $task) {
             // Update parent round cache for new tasks
             task_get_parent_rounds($task, true);
         }
@@ -309,8 +308,7 @@ function round_unregister_user($round_id, $user_id) {
 
 // Returs list of registred user to round $round_id, order by rating
 // round can be
-function round_get_registered_users_range($round_id, $start, $range)
-{
+function round_get_registered_users_range($round_id, $start, $range) {
     log_assert(is_round_id($round_id));
     log_assert(is_whole_number($start));
     log_assert(is_whole_number($range));
@@ -335,8 +333,7 @@ function round_get_registered_users_range($round_id, $start, $range)
 }
 
 // Returns number of registered users in a certain round
-function round_get_registered_users_count($round_id)
-{
+function round_get_registered_users_count($round_id) {
     log_assert(is_round_id($round_id));
 
     // FIXME: don't differentiate on $round['type']
@@ -347,30 +344,30 @@ function round_get_registered_users_count($round_id)
     return db_query_value($query);
 }
 
-// Makes all tasks visible
+// Makes all tasks protected from private
 // No error handling.
-// FIXME: task.hidden is stupid, we need proper security
 function round_unhide_all_tasks($round_id) {
     log_assert(is_round_id($round_id));
     $query = <<<SQL
 UPDATE `ia_task`
     JOIN `ia_round_task` ON `ia_round_task`.`task_id` = `ia_task`.`id`
-    SET `hidden` = 0
+    SET `security` = 'protected'
     WHERE `ia_round_task`.`round_id` = '%s'
+    AND `ia_task`.`security` = 'private'
 SQL;
     db_query(sprintf($query, db_escape($round_id)));
 }
 
-// Makes all tasks hidden
+// Makes all tasks private from protected
 // No error handling.
-// FIXME: task.hidden is stupid, we need proper security
 function round_hide_all_tasks($round_id) {
     log_assert(is_round_id($round_id));
     $query = <<<SQL
 UPDATE `ia_task`
     JOIN `ia_round_task` ON `ia_round_task`.`task_id` = `ia_task`.`id`
-    SET `hidden` = 1
+    SET `security` = 'private'
     WHERE `ia_round_task`.`round_id` = '%s'
+    AND `ia_task`.`security` = 'protected'
 SQL;
     db_query(sprintf($query, db_escape($round_id)));
 }
@@ -578,5 +575,3 @@ function round_delete($round_id) {
                       db_quote($round_id));
     db_query($query);
 }
-
-?>

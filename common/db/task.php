@@ -220,8 +220,7 @@ function task_get_authors($task_id, $no_cache = false) {
 
 // Task filter
 // Returns only tasks that contain all the tags
-// and are in 'arhiva' or in 'arhiva-educationala'
-// Task from 'arhiva-educationala' are shown first
+// and are public
 function task_filter_by_tags($tag_ids, $scores = true, $user_id = null) {
     log_assert(is_array($tag_ids), "tag_ids must be an array");
     foreach ($tag_ids as $tag_id) {
@@ -259,8 +258,8 @@ function task_filter_by_tags($tag_ids, $scores = true, $user_id = null) {
     LEFT JOIN ia_round_task AS round_task ON round_task.task_id = ia_task.id
     LEFT JOIN ia_round AS round ON round.id = round_task.round_id
     $join_score
-    WHERE (round.id = 'arhiva' OR round.id = 'arhiva-educationala')
-        AND ia_task.hidden = '0' $tag_filter
+    WHERE ia_task.security = 'public'
+    $tag_filter
     ORDER BY round.id DESC, round_task.`order_id`";
 
     $tasks = db_fetch_all($query);
