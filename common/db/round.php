@@ -150,7 +150,8 @@ function round_get_tasks($round_id, $first = 0, $count = null,
 
     $res = db_fetch_all($query);
 
-    if ($progress) {
+    // Check if we have what to progress
+    if ($progress && count($res) > 0) {
         $task_ids = array();
         foreach ($res as $row) {
             $task_ids[] = $row['id'];
@@ -217,7 +218,8 @@ function round_update_parameters($round_id, $param_values) {
 // It only stores them to database.
 //
 // $tasks is array of task id's
-function round_update_task_list($round_id, $old_tasks, $tasks) {
+function round_update_task_list($round_id, $old_tasks, $tasks,
+        $force_update_security = false, $force_check_common_tasks = false) {
     log_assert(is_round_id($round_id));
 
     $old_tasks_count = count($old_tasks);
@@ -241,6 +243,14 @@ function round_update_task_list($round_id, $old_tasks, $tasks) {
         task_get_parent_rounds($task, true);
     }
 
+    // Also check common tasks when changing round type to 'archive'
+    if ($force_update_security && $force_check_common_tasks
+        && count($common_tasks) > 0) {
+        foreach ($common_tasks as $task) {
+            task_update_security($task, 'public');
+        }
+    }
+
     if (count($tasks) > 0) {
         // insert new relations
         $values = array();
@@ -256,6 +266,9 @@ function round_update_task_list($round_id, $old_tasks, $tasks) {
         foreach ($tasks as $task) {
             // Update parent round cache for new tasks
             task_get_parent_rounds($task, true);
+            if ($force_update_security) {
+                task_update_security($task, 'public');
+            }
         }
     }
 
@@ -348,28 +361,20 @@ function round_get_registered_users_count($round_id) {
 // No error handling.
 function round_unhide_all_tasks($round_id) {
     log_assert(is_round_id($round_id));
-    $query = <<<SQL
-UPDATE `ia_task`
-    JOIN `ia_round_task` ON `ia_round_task`.`task_id` = `ia_task`.`id`
-    SET `security` = 'protected'
-    WHERE `ia_round_task`.`round_id` = '%s'
-    AND `ia_task`.`security` = 'private'
-SQL;
-    db_query(sprintf($query, db_escape($round_id)));
+    $tasks = round_get_tasks($round_id);
+    foreach ($tasks as $task) {
+        task_update_security($task['id'], 'protected');
+    }
 }
 
 // Makes all tasks private from protected
 // No error handling.
 function round_hide_all_tasks($round_id) {
     log_assert(is_round_id($round_id));
-    $query = <<<SQL
-UPDATE `ia_task`
-    JOIN `ia_round_task` ON `ia_round_task`.`task_id` = `ia_task`.`id`
-    SET `security` = 'private'
-    WHERE `ia_round_task`.`round_id` = '%s'
-    AND `ia_task`.`security` = 'protected'
-SQL;
-    db_query(sprintf($query, db_escape($round_id)));
+    $tasks = round_get_tasks($round_id);
+    foreach ($tasks as $task) {
+        task_update_security($task['id'], 'private');
+    }
 }
 
 // FIXME: horrible evil hack, for the eval.
@@ -426,15 +431,6 @@ SQL;
 // Gets the round to put in waiting, or null.
 // This is to prevent "back to the future" situations from fucking up round registration
 function round_get_round_to_wait() {
-    // Build duration subquery.
-    $duration_subquery = <<<SQL
-SELECT `value` FROM `ia_parameter_value`
-    WHERE `object_type` = 'round' AND
-          `object_id` = `id` AND
-          `parameter_id` = 'duration'
-    LIMIT 1
-SQL;
-
     // Build the main query.
     $query = <<<SQL
 SELECT *
