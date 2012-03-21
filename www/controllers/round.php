@@ -183,7 +183,8 @@ function controller_round_details($round_id) {
          * Also update all the tasks if changing round type
          */
         round_update_task_list($round_id, $round_tasks, $new_round_tasks,
-            $new_round['type'] == 'archive',
+            $round['type'] != 'user-defined' ||
+                $new_round['type'] != 'user-defined',
             $round['type'] != $new_round['type']);
 
         if (identity_can('round-tag', $new_round)) {

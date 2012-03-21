@@ -60,6 +60,7 @@ function task_init($task_id, $task_type, $user = null) {
             'public_tests' => NULL,
             'evaluator' => NULL,
             'use_ok_files' => 1,
+            'rating' => NULL,
     );
 
     // User stuff. ugly

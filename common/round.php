@@ -236,5 +236,3 @@ function round_event_wait($round) {
         round_hide_all_tasks($round['id']);
     }
 }
-
-?>

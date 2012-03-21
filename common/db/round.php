@@ -241,13 +241,16 @@ function round_update_task_list($round_id, $old_tasks, $tasks,
     foreach ($old_tasks as $task) {
         // Update parent round cache for old tasks
         task_get_parent_rounds($task, true);
+        if ($force_update_security) {
+            task_update_security($task, 'check');
+        }
     }
 
-    // Also check common tasks when changing round type to 'archive'
+    // Also check common tasks when forced to
     if ($force_update_security && $force_check_common_tasks
         && count($common_tasks) > 0) {
         foreach ($common_tasks as $task) {
-            task_update_security($task, 'public');
+            task_update_security($task, 'check');
         }
     }
 
@@ -267,7 +270,7 @@ function round_update_task_list($round_id, $old_tasks, $tasks,
             // Update parent round cache for new tasks
             task_get_parent_rounds($task, true);
             if ($force_update_security) {
-                task_update_security($task, 'public');
+                task_update_security($task, 'check');
             }
         }
     }

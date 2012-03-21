@@ -433,14 +433,21 @@ function task_user_update_submit_count($user_id, $round_id, $task_id) {
 }
 
 /**
- * Updates the task security (default public)
+ * Updates the task security (default checks if the target is in an archive
+ * if so it makes the task public, otherwise protected)
  * @param string $task_id
  * @param string $security
  */
 function task_update_security($task_id, $security = 'check') {
     log_assert(is_task_id($task_id));
     log_assert(array_key_exists($security,
-                array_merge(task_get_security_types(), array('check' => 0))));
+                                array_merge(task_get_security_types(),
+                                            array('check' => NULL))));
+
+    if ($security == 'check') {
+        $security = task_in_archive_rounds($task_id) ? 'public' : 'protected';
+    }
+
     $new_task = task_get($task_id);
     $new_task['security'] = $security;
     task_update($new_task);
@@ -454,8 +461,8 @@ function task_update_security($task_id, $security = 'check') {
  */
 function task_in_archive_rounds ($task_id) {
     log_assert(is_task_id($task_id));
-    $parrent_rounds = task_get_parent_rounds($task_id);
-    foreach ($parrent_rounds as $round_id) {
+    $parent_rounds = task_get_parent_rounds($task_id);
+    foreach ($parent_rounds as $round_id) {
         $round = round_get($round_id);
         if ($round['type'] == 'archive') {
             return true;
