@@ -569,9 +569,10 @@ function security_job($user, $action, $job) {
     }
 
     $can_view_job = ($job['task_security'] != 'private') || $is_task_owner
-                 || $is_admin;
-    $can_view_source = ($job['task_open_source'] == true) || $is_task_owner ||
-                       $is_owner || $is_admin || $is_intern;
+                 || $is_admin || $is_intern;
+    $can_view_source = ($job['task_security'] != 'private' &&
+                            $job['task_open_source'] == true) ||
+                       $is_task_owner || $is_owner || $is_admin || $is_intern;
     // make ALL solved tasks visible
     if (!$can_view_source && is_user_id($user['id']) && $job['round_type'] == "archive") {
         $score = task_get_user_score($job['task_id'], $user['id'], $job['round_id']);

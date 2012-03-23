@@ -419,7 +419,7 @@ function task_user_get_submit_count($user_id, $round_id, $task_id) {
  */
 function task_user_update_submit_count($user_id, $round_id, $task_id) {
     if (is_null($round_id) || $round_id === '') {
-        // No round id means that the task is still being added by it's author.
+        // No round id means that the task is still being added by its author.
         return;
     }
     log_assert(is_user_id($user_id));
