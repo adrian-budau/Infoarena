@@ -1,4 +1,21 @@
 <?php
+
+/*
+ * Copyright 2012 Infoarena
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 require_once(IA_ROOT_DIR . "common/textblock.php");
 
 // This module implements task and task-param related stuff.
@@ -176,9 +193,9 @@ function task_parse_test_group($string, $test_count) {
         if (count($tests) < 1 || count($tests) > 2) {
             return false;
         }
-        foreach ($tests as &$test) {
-            $test = trim($test);
-            if (!is_whole_number($test)) {
+        foreach ($tests as &$single_test) {
+            $single_test = trim($single_test);
+            if (!is_whole_number($single_test)) {
                 return false;
             }
         }
@@ -235,8 +252,8 @@ function task_get_testgroups($task) {
         if (!$current_group) {
             return false;
         }
-        foreach ($current_group as $test) {
-            $used_count[$test]++;
+        foreach ($current_group as $single_test) {
+            $used_count[$single_test]++;
         }
         $testgroups[] = $current_group;
     }

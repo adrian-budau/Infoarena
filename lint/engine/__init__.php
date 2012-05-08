@@ -19,3 +19,4 @@ phutil_require_module('arcanist', 'lint/severity');
 
 
 phutil_require_source('InfoarenaLintEngine.php');
+phutil_require_source('AGPLLicenseLinter.php');

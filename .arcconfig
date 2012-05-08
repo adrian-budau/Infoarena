@@ -3,5 +3,6 @@
   "lint_engine": "InfoarenaLintEngine",
   "phutil_libraries": {
     "lint": "lint/"
-  }
+  },
+  "copyright_holder": "Asociatia Infoarena"
 }

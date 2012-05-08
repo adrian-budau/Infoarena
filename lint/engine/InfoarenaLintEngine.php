@@ -144,15 +144,14 @@ final class InfoarenaLintEngine extends ArcanistLintEngine {
         }
 
         $license_linter = new ArcanistApacheLicenseLinter();
-        $linters[] = $license_linter;
         foreach ($paths as $path) {
-            if (preg_match('/\.(php|cpp|hpp|l|y)$/', $path)) {
-                if (!preg_match('@^externals/@', $path)) {
-                    $license_linter->addPath($path);
-                    $license_linter->addData($path, $this->loadData($path));
-                }
+            if (preg_match('/\.(php|cpp|hpp|l|y)$/', $path) &&
+                    !$this -> isLintFile($path)) {
+                $license_linter->addPath($path);
+                $license_linter->addData($path, $this->loadData($path));
             }
         }
+        $linters[] = $license_linter;
 
         return $linters;
     }
@@ -173,4 +172,7 @@ final class InfoarenaLintEngine extends ArcanistLintEngine {
         return preg_match('@^www/views/@', $path);
     }
 
+    private function isLintFile($path) {
+        return preg_match('@^lint/@', $path);
+    }
 }
