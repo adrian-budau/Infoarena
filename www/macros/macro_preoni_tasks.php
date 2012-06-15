@@ -37,7 +37,7 @@ function macro_preoni_tasks($args) {
         if ($v > 0) {
             $html .= '<sub>'.$v.'</sub>';
         }
-        $html .= '<img src="http://infoarena.ro/planificare/preoni-2008?action=download&file=bardot.gif" width="20" height="'.($v*10).'">';
+        $html .= '<img src="//infoarena.ro/planificare/preoni-2008?action=download&file=bardot.gif" width="20" height="'.($v*10).'">';
         $html .= '</td>';
     }
     $html .= '</tr>';

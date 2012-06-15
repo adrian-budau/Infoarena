@@ -401,7 +401,7 @@ function url_changes_rss() {
 }
 
 function url_forum() {
-    return IA_SMF_URL;
+    return url_complex("forum", array());
 }
 
 function url_userwidget($user_id) {

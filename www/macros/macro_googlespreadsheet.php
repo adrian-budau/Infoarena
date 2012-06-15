@@ -23,7 +23,7 @@ function macro_googlespreadsheet($args) {
         return macro_error('Invalid `width` / `height` argument');
     }
 
-    $url = "http://spreadsheets.google.com/pub?key=$doc_key&amp;widget=true";
+    $url = "//spreadsheets.google.com/pub?key=$doc_key&amp;widget=true";
     $html = "<iframe width=\"$width\" height=\"$height\" ".
             "frameborder=\"0\" src=\"$url\"></iframe>";
 

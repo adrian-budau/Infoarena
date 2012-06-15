@@ -22,7 +22,7 @@ function macro_googledocument($args) {
         return macro_error('Invalid `width` / `height` argument');
     }
 
-    $url = "http://docs.google.com/View?docID=$doc_key";
+    $url = "//docs.google.com/View?docID=$doc_key";
     $html = "<iframe width=\"$width\" height=\"$height\" ".
             "frameborder=\"0\" src=\"$url\"></iframe>";
 
