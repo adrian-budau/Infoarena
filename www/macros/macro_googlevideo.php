@@ -32,5 +32,3 @@ function macro_googlevideo($args) {
 
     return $html;
 }
-
-?>

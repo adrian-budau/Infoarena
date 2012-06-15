@@ -5,7 +5,7 @@
 // Arguments:
 //      id (required)       Google Document ID
 //      width(optional)     default 1000px
-//      heigth(optional)    default 600px 
+//      height(optional)    default 600px
 //
 // Example: ==GoogleDocument(id="dfct3qd8_4gtxnh4dx" height = "200" width = "500")==
 function macro_googledocument($args) {
@@ -28,5 +28,3 @@ function macro_googledocument($args) {
 
     return $html;
 }
-
-?>

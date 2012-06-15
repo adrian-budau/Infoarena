@@ -32,5 +32,3 @@ function macro_youtubevideo($args) {
 
     return $html;
 }
-
-?>

@@ -23,6 +23,3 @@ function macro_userwidget($args) {
     $ret .= '" />';
     return $ret;
 }
-?>
-
-

@@ -67,5 +67,3 @@ function macro_calendar($args) {
 
     return $html;
 }
-
-?>

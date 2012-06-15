@@ -41,5 +41,3 @@ function macro_triluliluvideo($args) {
 
     return $html;
 }
-
-?>

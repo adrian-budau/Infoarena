@@ -5,7 +5,7 @@
 // Arguments:
 //      id (required)       Google Spreadsheet Key
 //      width(optional)     default 1000px
-//      heigth(optional)    default 600px 
+//      height(optional)    default 600px
 //
 // Example: ==GoogleSpreadsheet(id="pqhshqsOa5Pa3Z39x86jSXg" height = "200" width = "500")==
 
@@ -29,5 +29,3 @@ function macro_googlespreadsheet($args) {
 
     return $html;
 }
-
-?>
