@@ -27,7 +27,7 @@ log_assert(isset($user_is_anonymous));
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <?php if ($in_browser) { ?>
     <script type="text/javascript" src="<?= html_escape(url_static('js/config.js.php')) ?>"></script>
-    <script type="text/javascript" src="<?= html_escape(url_static('js/MochiKit.js')) ?>"></script>
+    <script type="text/javascript" src="<?= html_escape(url_static('js/jquery-dev.js')) ?>"></script>
     <script type="text/javascript" src="<?= html_escape(url_static('js/newsletter.js')) ?>"></script>
   <?php } ?>
 </head>
