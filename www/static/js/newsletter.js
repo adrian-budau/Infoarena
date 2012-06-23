@@ -38,4 +38,4 @@ function Newsletter_LinkClick(event) {
     return false;
 }
 
-$(window).on("load", Newsletter_Init);
+$(window).one("load", Newsletter_Init);

@@ -11,9 +11,6 @@ function Monitor_Init() {
 function Monitor_Refresh(){
     $("#monitor-table").load(Monitor_Url, {},
         function(responseText, statusText, req) {
-            if (statusText == 'error') {
-                return;
-            }
             if (Monitor_AutoRefresh) {
                 setTimeout(Monitor_Refresh, Monitor_Timeout);
             }

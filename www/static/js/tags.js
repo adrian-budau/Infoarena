@@ -9,5 +9,5 @@ function show_tag_list(parent_tag_id) {
 function show_tags() {
     $(".tags_list_item").css('display', 'list-item');
 
-    document.getElementById('show_tags').style.display = "none";
+    $('#show_tags').hide();
 }

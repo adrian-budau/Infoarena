@@ -66,7 +66,9 @@ function Submit_UpdateTask() {
     if (t.val()) {
         $('#field_round').css('display', Submit_RoundDisplay);
 
-        $.ajax({url:BASE_HREF + 'json/task-get-rounds?task_id=' + escape(t.val()), dataType: 'json', type: 'POST', success:
+        $.ajax({
+            url:BASE_HREF + 'json/task-get-rounds?task_id=' + escape(t.val()),
+            dataType: 'json', type: 'POST', success:
             function(response, postStatus, xhr) {
                 if (postStatus == 'error') {
                     alert('Eroare! Nu pot determina rundele. Incercati din nou.');
@@ -80,7 +82,10 @@ function Submit_UpdateTask() {
                 warning_container = $('#field_round_warning');
                 if (warning_container.length > 0) {
                     if (rounds.length != 1) {
-                        warning_container.html('<p class="submit-warning">Această problemă face parte din mai multe concursuri. Selectează-l pe cel la care participi!</p>');
+                        warning_container.html(
+                            '<p class="submit-warning">Această problemă face p'
+                          + 'arte din mai multe concursuri. Selectează-l pe ce'
+                          + 'l la care participi!</p>');
                     } else {
                         warning_container.html('');
                     }
@@ -100,7 +105,7 @@ function Submit_UpdateTask() {
             }
         }});
     } else {
-        $('#field_round').style.display = 'none';
+        $('#field_round').hide();
     }
 
     // auto-choose compiler
@@ -122,10 +127,8 @@ function Submit_Init() {
     Submit_RoundDisplay = $('#field_round').css('display');
 
     fSolution.on("change", Submit_UpdateSolution);
-    //connect(fSolution, 'onchange', Submit_UpdateSolution);
 
     if ('hidden' != fTask.type) {
-        //connect(fTask, 'onchange', Submit_UpdateTask);
         fTask.on("change", Submit_UpdateTask);
     }
 

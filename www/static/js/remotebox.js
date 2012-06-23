@@ -33,7 +33,7 @@ function RemoteBox_Comments(begin_comm, max_comm, focus_on_comments, display) {
     RemoteBox_Url = RemoteBox_Url + "&display=" + display +
             "&begin_comm=" + begin_comm +
             "&max_comm=" + max_comm;
-    if (focus_on_comments != true) {
+    if (focus_on_comments == true) {
         var remotebox_function = function() {
             // set the anchor to the "comentarii" element
             window.location.hash = "comentarii";

@@ -22,7 +22,6 @@ function Page_Init() {
         // maximize on click
         var callback = function(event) {
             log.height(log.prop('scrollHeight'));
-            log.unbind('click');
             log.prop('id', 'log_active');
         }
         log.one('click', callback);
